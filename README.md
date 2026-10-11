@@ -13,8 +13,9 @@ Zig grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter), forke
 to its authors and contributors. This is not an official release of that project.
 
 This fork keeps the grammar of upstream's version 1.1.2 and generates the parser with the
-[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator at ABI 16, whose compact parse tables
-need that fork's runtime. It parses as the parser in upstream's 1.1.2 packages does, with two exceptions:
+[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries that fork's own ABI
+number (`0x57420001`) and loads only with that fork's runtime, version 2.0.0 or later: upstream's tree-sitter runtime
+rejects it. It parses as the parser in upstream's 1.1.2 packages does, with two exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
   the one before `..`, for example `(`, `[`, `.`, `*`, `&`, `-`, or `!` (as in `for (0..(n)) |i| {}` or
@@ -29,7 +30,7 @@ need that fork's runtime. It parses as the parser in upstream's 1.1.2 packages d
 ## Usage
 
 The npm package ships `tree-sitter-zig.wasm` for
-[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 1.4.3 or later, which runs in Node.js, Bun, browsers, and Cloudflare Workers. In Node.js and Bun, load the grammar from its path:
+[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 2.0.0 or later, which runs in Node.js, Bun, browsers, and Cloudflare Workers. In Node.js and Bun, load the grammar from its path:
 
 ```js
 import { fileURLToPath } from 'node:url';
@@ -75,7 +76,7 @@ fuzzed with:
 
 ```toml
 [dependencies]
-tree-sitter = { package = "willbooster-tree-sitter", version = "1.4.3" }
+tree-sitter = { package = "willbooster-tree-sitter", version = "2" }
 tree-sitter-zig = { package = "willbooster-tree-sitter-zig", version = "1" }
 ```
 
@@ -102,7 +103,7 @@ not the ones this package ships with. Its first run downloads that CLI from the 
 with `cargo` (whose build runs the CMake that `mise.toml` pins) when the download fails or the release has no binary that runs here. Run other CLI commands through it as
 well (e.g. `script/tree-sitter parse file.zig`).
 
-`bun run generate` records a fresh ABI 16 generation profile from the applicable `test/corpus` cases, then generates
+`bun run generate` records a fresh generation profile from the applicable `test/corpus` cases, then generates
 compact parser tables. It would also profile files tracked in `examples/`, but this repository tracks none: upstream
 ships neither examples nor a corpus, so the cases in `test/corpus` were written for this fork, with the trees upstream's
 packaged parser gives them, except the NUL case and the `for` range case, which pin this parser's reading. The parser also embeds metadata from `tree-sitter.json`.
