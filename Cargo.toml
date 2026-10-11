@@ -18,6 +18,7 @@ include = [
   "/queries/*",
   "/src/*",
   "!/src/.gitattributes",
+  "!/src/.editorconfig",
   "/tree-sitter.json",
   "/LICENSE",
 ]
