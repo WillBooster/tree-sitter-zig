@@ -36,7 +36,7 @@ await Parser.init();
 const parser = new Parser();
 const wasmPath = fileURLToPath(import.meta.resolve('@willbooster/tree-sitter-zig/tree-sitter-zig.wasm'));
 parser.setLanguage(await Language.load(wasmPath));
-const tree = parser.parse('.foo {\n  color: red;\n}\n');
+const tree = parser.parse('pub fn main() void {}\n');
 ```
 
 In browsers, serve both `.wasm` files and load them by URL (the example uses Vite's `?url` imports):
