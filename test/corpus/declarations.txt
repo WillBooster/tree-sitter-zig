@@ -1,0 +1,257 @@
+================================================================================
+Constants and variables
+================================================================================
+
+const std = @import("std");
+pub const max_len: usize = 1 << 12;
+var counter: u32 = 0;
+threadlocal var scratch: [64]u8 = undefined;
+extern var errno: c_int;
+export const version: [*:0]const u8 = "1.0";
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (builtin_function
+      (builtin_identifier)
+      (arguments
+        (string
+          (string_content)))))
+  (variable_declaration
+    (identifier)
+    type: (builtin_type)
+    (binary_expression
+      left: (integer)
+      right: (integer)))
+  (variable_declaration
+    (identifier)
+    type: (builtin_type)
+    (integer))
+  (variable_declaration
+    (identifier)
+    type: (array_type
+      (integer)
+      (builtin_type)))
+  (variable_declaration
+    (identifier)
+    type: (builtin_type))
+  (variable_declaration
+    (identifier)
+    type: (pointer_type
+      (integer)
+      (builtin_type))
+    (string
+      (string_content))))
+
+================================================================================
+Functions
+================================================================================
+
+fn add(a: i32, b: i32) i32 {
+    return a + b;
+}
+
+pub fn main() !void {
+    const sum = add(1, 2);
+    _ = sum;
+}
+
+export fn entry(argc: c_int, argv: [*][*:0]u8) callconv(.C) c_int {
+    _ = argv;
+    return argc;
+}
+
+inline fn id(comptime T: type, value: T) T {
+    return value;
+}
+
+extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (builtin_type)))
+    type: (builtin_type)
+    body: (block
+      (expression_statement
+        (return_expression
+          (binary_expression
+            left: (identifier)
+            right: (identifier))))))
+  (function_declaration
+    name: (identifier)
+    (parameters)
+    type: (error_union_type
+      ok: (builtin_type))
+    body: (block
+      (variable_declaration
+        (identifier)
+        (call_expression
+          function: (identifier)
+          (integer)
+          (integer)))
+      (variable_declaration
+        (identifier)
+        (identifier))))
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (pointer_type
+          (pointer_type
+            (integer)
+            (builtin_type)))))
+    (calling_convention
+      (field_expression
+        member: (identifier)))
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        (identifier))
+      (expression_statement
+        (return_expression
+          (identifier)))))
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (identifier)))
+    type: (identifier)
+    body: (block
+      (expression_statement
+        (return_expression
+          (identifier)))))
+  (function_declaration
+    (string
+      (string_content))
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (pointer_type
+          (builtin_type)))
+      (parameter
+        name: (identifier)
+        type: (builtin_type)))
+    type: (builtin_type)))
+
+================================================================================
+Tests and comptime blocks
+================================================================================
+
+test "addition" {
+    try std.testing.expectEqual(@as(i32, 3), 1 + 2);
+}
+
+test add {
+    comptime {
+        var i: usize = 0;
+        while (i < 4) : (i += 1) {}
+    }
+}
+
+comptime {
+    _ = @sizeOf(u8);
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (test_declaration
+    (string
+      (string_content))
+    (block
+      (expression_statement
+        (try_expression
+          (call_expression
+            function: (field_expression
+              object: (field_expression
+                object: (identifier)
+                member: (identifier))
+              member: (identifier))
+            (builtin_function
+              (builtin_identifier)
+              (arguments
+                (builtin_type)
+                (integer)))
+            (binary_expression
+              left: (integer)
+              right: (integer)))))))
+  (test_declaration
+    (identifier)
+    (block
+      (comptime_statement
+        (block
+          (variable_declaration
+            (identifier)
+            type: (builtin_type)
+            (integer))
+          (labeled_statement
+            (while_statement
+              condition: (binary_expression
+                left: (identifier)
+                right: (integer))
+              (assignment_expression
+                left: (identifier)
+                right: (integer))
+              body: (block_expression
+                (block))))))))
+  (comptime_declaration
+    (block
+      (variable_declaration
+        (identifier)
+        (builtin_function
+          (builtin_identifier)
+          (arguments
+            (builtin_type)))))))
+
+================================================================================
+Usingnamespace and doc comments
+================================================================================
+
+//! Module documentation.
+
+/// Adds numbers.
+pub usingnamespace @import("other.zig");
+
+// A line comment.
+const x = 1; // trailing
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (comment)
+  (using_namespace_declaration
+    (builtin_function
+      (builtin_identifier)
+      (arguments
+        (string
+          (string_content)))))
+  (comment)
+  (variable_declaration
+    (identifier)
+    (integer))
+  (comment))

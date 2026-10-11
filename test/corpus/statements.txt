@@ -1,0 +1,433 @@
+================================================================================
+If and optional capture
+================================================================================
+
+fn f(opt: ?u32, res: anyerror!u32) u32 {
+    if (opt) |value| {
+        return value;
+    } else if (res) |ok| {
+        return ok;
+    } else |err| {
+        _ = err;
+    }
+    const y = if (opt == null) 1 else 2;
+    return y;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (nullable_type
+          (builtin_type)))
+      (parameter
+        name: (identifier)
+        type: (error_union_type
+          error: (builtin_type)
+          ok: (builtin_type))))
+    type: (builtin_type)
+    body: (block
+      (if_statement
+        condition: (identifier)
+        (payload
+          (identifier))
+        body: (block_expression
+          (block
+            (expression_statement
+              (return_expression
+                (identifier)))))
+        (else_clause
+          alternative: (if_statement
+            condition: (identifier)
+            (payload
+              (identifier))
+            body: (block_expression
+              (block
+                (expression_statement
+                  (return_expression
+                    (identifier)))))
+            (else_clause
+              (payload
+                (identifier))
+              alternative: (labeled_statement
+                (block
+                  (variable_declaration
+                    (identifier)
+                    (identifier))))))))
+      (variable_declaration
+        (identifier)
+        (if_expression
+          condition: (binary_expression
+            left: (identifier))
+          (integer)
+          (integer)))
+      (expression_statement
+        (return_expression
+          (identifier))))))
+
+================================================================================
+Loops
+================================================================================
+
+fn g(items: []const u8) usize {
+    var total: usize = 0;
+    for (items, 0..) |item, index| {
+        if (item == 0) continue;
+        total += index;
+    }
+    outer: while (true) {
+        inner: for (0..10) |n| {
+            if (n == 5) break :outer;
+            if (n == 3) continue :inner;
+        }
+    }
+    var it: ?u8 = 1;
+    while (it) |v| : (it = null) {
+        _ = v;
+    } else {
+        total = 0;
+    }
+    inline for (.{ 1, 2 }) |k| total += k;
+    return total;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (slice_type
+          (builtin_type))))
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        type: (builtin_type)
+        (integer))
+      (labeled_statement
+        (for_statement
+          (identifier)
+          (range_expression
+            left: (integer))
+          (payload
+            (identifier)
+            (identifier))
+          body: (block_expression
+            (block
+              (if_statement
+                condition: (binary_expression
+                  left: (identifier)
+                  right: (integer))
+                body: (continue_expression))
+              (variable_declaration
+                (identifier)
+                (identifier))))))
+      (labeled_statement
+        (block_label
+          (identifier))
+        (while_statement
+          condition: (boolean)
+          body: (block_expression
+            (block
+              (labeled_statement
+                (block_label
+                  (identifier))
+                (for_statement
+                  (range_expression
+                    left: (integer)
+                    right: (integer))
+                  (payload
+                    (identifier))
+                  body: (block_expression
+                    (block
+                      (if_statement
+                        condition: (binary_expression
+                          left: (identifier)
+                          right: (integer))
+                        body: (break_expression
+                          (break_label
+                            (identifier))))
+                      (if_statement
+                        condition: (binary_expression
+                          left: (identifier)
+                          right: (integer))
+                        body: (continue_expression
+                          (break_label
+                            (identifier))))))))))))
+      (variable_declaration
+        (identifier)
+        type: (nullable_type
+          (builtin_type))
+        (integer))
+      (labeled_statement
+        (while_statement
+          condition: (identifier)
+          (payload
+            (identifier))
+          (assignment_expression
+            left: (identifier))
+          body: (block_expression
+            (block
+              (variable_declaration
+                (identifier)
+                (identifier))))
+          (else_clause
+            alternative: (labeled_statement
+              (block
+                (variable_declaration
+                  (identifier)
+                  (integer)))))))
+      (labeled_statement
+        (for_statement
+          (anonymous_struct_initializer
+            (initializer_list
+              (integer)
+              (integer)))
+          (payload
+            (identifier))
+          body: (assignment_expression
+            left: (identifier)
+            right: (identifier))))
+      (expression_statement
+        (return_expression
+          (identifier))))))
+
+================================================================================
+Switch
+================================================================================
+
+fn h(x: u8, v: Value) u8 {
+    const r = switch (x) {
+        0 => 1,
+        1, 2 => 3,
+        4...9 => |n| n,
+        else => blk: {
+            break :blk 0;
+        },
+    };
+    switch (v) {
+        .int => |*p| p.* += 1,
+        inline .float, .none => {},
+    }
+    return r;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (identifier)))
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        (switch_expression
+          (identifier)
+          (switch_case
+            (integer)
+            (integer))
+          (switch_case
+            (integer)
+            (integer)
+            (integer))
+          (switch_case
+            (integer)
+            (integer)
+            (payload
+              (identifier))
+            (identifier))
+          (switch_case
+            (labeled_type_expression
+              (block_label
+                (identifier))
+              (block
+                (expression_statement
+                  (break_expression
+                    (break_label
+                      (identifier))
+                    (integer))))))))
+      (switch_expression
+        (identifier)
+        (switch_case
+          (field_expression
+            member: (identifier))
+          (payload
+            (identifier))
+          (assignment_expression
+            left: (dereference_expression
+              (identifier))
+            right: (integer)))
+        (switch_case
+          (field_expression
+            member: (identifier))
+          (field_expression
+            member: (identifier))
+          (block)))
+      (expression_statement
+        (return_expression
+          (identifier))))))
+
+================================================================================
+Defer, errdefer and error handling
+================================================================================
+
+fn k(allocator: Allocator) !void {
+    const buf = try allocator.alloc(u8, 16);
+    defer allocator.free(buf);
+    errdefer |err| log(err);
+    const n = read(buf) catch |err| switch (err) {
+        error.EndOfStream => 0,
+        else => return err,
+    };
+    const m = maybe() orelse return;
+    _ = n;
+    _ = m;
+    nosuspend {}
+    suspend {}
+    unreachable;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (identifier)))
+    type: (error_union_type
+      ok: (builtin_type))
+    body: (block
+      (variable_declaration
+        (identifier)
+        (try_expression
+          (call_expression
+            function: (field_expression
+              object: (identifier)
+              member: (identifier))
+            (builtin_type)
+            (integer))))
+      (defer_statement
+        (expression_statement
+          (call_expression
+            function: (field_expression
+              object: (identifier)
+              member: (identifier))
+            (identifier))))
+      (errdefer_statement
+        (payload
+          (identifier))
+        (expression_statement
+          (call_expression
+            function: (identifier)
+            (identifier))))
+      (variable_declaration
+        (identifier)
+        (catch_expression
+          (call_expression
+            function: (identifier)
+            (identifier))
+          (payload
+            (identifier))
+          (switch_expression
+            (identifier)
+            (switch_case
+              (error_type
+                (identifier))
+              (integer))
+            (switch_case
+              (return_expression
+                (identifier))))))
+      (variable_declaration
+        (identifier)
+        (binary_expression
+          left: (call_expression
+            function: (identifier))
+          right: (return_expression)))
+      (variable_declaration
+        (identifier)
+        (identifier))
+      (variable_declaration
+        (identifier)
+        (identifier))
+      (nosuspend_statement
+        (block))
+      (suspend_statement
+        (block))
+      (expression_statement))))
+
+================================================================================
+Blocks and assignments
+================================================================================
+
+fn m() void {
+    var a: u8 = 1;
+    a += 1;
+    a -%= 1;
+    a <<= 2;
+    a |= 0x0f;
+    const b, const c = .{ a, a };
+    {
+        const d = b;
+        _ = d;
+    }
+    _ = c;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters)
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        type: (builtin_type)
+        (integer))
+      (variable_declaration
+        (identifier)
+        (integer))
+      (variable_declaration
+        (identifier)
+        (integer))
+      (variable_declaration
+        (identifier)
+        (integer))
+      (variable_declaration
+        (identifier)
+        (integer))
+      (variable_declaration
+        (identifier)
+        (identifier)
+        (anonymous_struct_initializer
+          (initializer_list
+            (identifier)
+            (identifier))))
+      (labeled_statement
+        (block
+          (variable_declaration
+            (identifier)
+            (identifier))
+          (variable_declaration
+            (identifier)
+            (identifier))))
+      (variable_declaration
+        (identifier)
+        (identifier)))))

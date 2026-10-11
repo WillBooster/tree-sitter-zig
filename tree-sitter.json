@@ -5,9 +5,8 @@
       "name": "zig",
       "camelcase": "Zig",
       "scope": "source.zig",
-      "file-types": [
-        "zig"
-      ],
+      "path": ".",
+      "file-types": ["zig"],
       "highlights": "queries/highlights.scm",
       "injections": "queries/injections.scm",
       "injection-regex": "^zig$"
@@ -19,20 +18,21 @@
     "description": "Zig grammar for tree-sitter",
     "authors": [
       {
-        "name": "Amaan Qureshi",
-        "email": "amaanq12@gmail.com"
+        "name": "WillBooster Inc."
       }
     ],
     "links": {
-      "repository": "https://github.com/tree-sitter-grammars/tree-sitter-zig"
+      "repository": "https://github.com/WillBooster/tree-sitter-zig"
     }
   },
   "bindings": {
-    "c": true,
-    "go": true,
-    "node": true,
-    "python": true,
+    "c": false,
+    "go": false,
+    "java": false,
+    "node": false,
+    "python": false,
     "rust": true,
-    "swift": true
+    "swift": false,
+    "zig": false
   }
 }
