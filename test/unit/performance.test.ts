@@ -14,13 +14,16 @@ const parser = new Parser();
 parser.setLanguage(await Language.load(WasmPath));
 
 // The tests load the existing Wasm build, so a stale one would hide an edit that makes error recovery slower than linear.
+// `tree-sitter build --wasm` compiles src/ without regenerating it, so each step is checked on its own.
 test('uses a Wasm build built from the current parser', () => {
-  const sources = ['grammar.js', 'src/parser.c', 'src/tree_sitter/parser.h'].map(
-    (name) => fs.statSync(path.join(Root, name)).mtimeMs
-  );
+  const mtime = (file: string): number => fs.statSync(path.join(Root, file)).mtimeMs;
   expect(
-    Math.max(generationInputMtime(Root), ...sources) > fs.statSync(WasmPath).mtimeMs,
-    'generation inputs or src/ changed after the Wasm build was built; run `bun run build/ci`'
+    Math.max(generationInputMtime(Root), mtime('grammar.js')) > mtime('src/parser.c'),
+    'generation inputs changed after src/parser.c was generated; run `bun run build/ci`'
+  ).toBe(false);
+  expect(
+    Math.max(mtime('src/parser.c'), mtime('src/tree_sitter/parser.h')) > fs.statSync(WasmPath).mtimeMs,
+    'src/ changed after the Wasm build was built; run `bun run build/ci`'
   ).toBe(false);
 });
 
