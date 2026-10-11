@@ -1,5 +1,5 @@
 ================================================================================
-For ranges whose end could continue the start
+For ranges whose end can both start an expression and continue the start
 ================================================================================
 
 fn f(n: usize, x: usize) void {
