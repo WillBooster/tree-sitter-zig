@@ -138,4 +138,4 @@ with libFuzzer and sanitizers (`.github/workflows/robustness.yml`).
 
 ### References
 
-- [Zig Grammar](https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y)
+- [Zig Grammar](https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.peg)
