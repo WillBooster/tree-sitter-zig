@@ -11,7 +11,7 @@ fn main() {
     if std::env::var("TARGET").unwrap() == "wasm32-unknown-unknown" {
         let Ok(wasm_headers) = std::env::var("DEP_TREE_SITTER_LANGUAGE_WASM_HEADERS") else {
             panic!(
-                "Environment variable DEP_TREE_SITTER_LANGUAGE_WASM_HEADERS must be set by the language crate"
+                "Environment variable DEP_TREE_SITTER_LANGUAGE_WASM_HEADERS must be set by the language crate (tree-sitter-language 0.1.6 or later)"
             );
         };
 
