@@ -1,0 +1,460 @@
+================================================================================
+Literals
+================================================================================
+
+const a = 123;
+const b = 0xff_ff;
+const c = 0b1010;
+const d = 0o17;
+const e = 1.5e-3;
+const f = 0x1.8p3;
+const g = 'a';
+const h = '\n';
+const i = '\u{1f600}';
+const j = "hello \"world\"\x00";
+const k = true;
+const l = null;
+const m = undefined;
+const n = .enum_literal;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (integer))
+  (variable_declaration
+    (identifier)
+    (integer))
+  (variable_declaration
+    (identifier)
+    (integer))
+  (variable_declaration
+    (identifier)
+    (integer))
+  (variable_declaration
+    (identifier)
+    (float))
+  (variable_declaration
+    (identifier)
+    (float))
+  (variable_declaration
+    (identifier)
+    (character
+      (character_content)))
+  (variable_declaration
+    (identifier)
+    (character
+      (escape_sequence)))
+  (variable_declaration
+    (identifier)
+    (character
+      (escape_sequence)))
+  (variable_declaration
+    (identifier)
+    (string
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (escape_sequence)))
+  (variable_declaration
+    (identifier)
+    (boolean))
+  (variable_declaration
+    (identifier))
+  (variable_declaration
+    (identifier))
+  (variable_declaration
+    (identifier)
+    (field_expression
+      member: (identifier))))
+
+================================================================================
+Multiline strings
+================================================================================
+
+const text =
+    \\first line
+    \\second "line"
+;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (multiline_string)))
+
+================================================================================
+Operators
+================================================================================
+
+const a = 1 + 2 * 3 - 4 / 5 % 6;
+const b = x and y or !z;
+const c = p == q or p != q and p < q;
+const d = u +% v -| w *| t;
+const e = s ++ t ** 2;
+const f = v << 1 >> 2 & 3 | 4 ^ ~5;
+const g = -x + &y - ptr.* + opt.?;
+const h = e1 || e2;
+const i = a orelse b catch c;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (integer)
+        right: (binary_expression
+          left: (integer)
+          right: (integer)))
+      right: (binary_expression
+        left: (binary_expression
+          left: (integer)
+          right: (integer))
+        right: (integer))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (identifier)
+        right: (identifier))
+      right: (error_union_type
+        ok: (identifier))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (identifier)
+        right: (identifier))
+      right: (binary_expression
+        left: (binary_expression
+          left: (identifier)
+          right: (identifier))
+        right: (binary_expression
+          left: (identifier)
+          right: (identifier)))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (identifier)
+        right: (identifier))
+      right: (binary_expression
+        left: (identifier)
+        right: (identifier))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (identifier)
+      right: (binary_expression
+        left: (identifier)
+        right: (integer))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (binary_expression
+          left: (binary_expression
+            left: (binary_expression
+              left: (identifier)
+              right: (integer))
+            right: (integer))
+          right: (integer))
+        right: (integer))
+      right: (unary_expression
+        argument: (integer))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (binary_expression
+        left: (binary_expression
+          left: (unary_expression
+            argument: (identifier))
+          right: (unary_expression
+            argument: (identifier)))
+        right: (dereference_expression
+          (identifier)))
+      right: (null_coercion_expression
+        (identifier))))
+  (variable_declaration
+    (identifier)
+    (binary_expression
+      left: (identifier)
+      right: (identifier)))
+  (variable_declaration
+    (identifier)
+    (catch_expression
+      (binary_expression
+        left: (identifier)
+        right: (identifier))
+      (identifier))))
+
+================================================================================
+Calls, indexing and field access
+================================================================================
+
+const a = foo(1, "two", .three);
+const b = std.mem.eql(u8, x, y);
+const c = items[0];
+const d = items[1..];
+const e = items[1..n :0];
+const f = @as(u32, @intCast(value));
+const g = @import("builtin").target.cpu.arch;
+const h = obj.method().field[2].*;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (call_expression
+      function: (identifier)
+      (integer)
+      (string
+        (string_content))
+      (field_expression
+        member: (identifier))))
+  (variable_declaration
+    (identifier)
+    (call_expression
+      function: (field_expression
+        object: (field_expression
+          object: (identifier)
+          member: (identifier))
+        member: (identifier))
+      (builtin_type)
+      (identifier)
+      (identifier)))
+  (variable_declaration
+    (identifier)
+    (index_expression
+      object: (identifier)
+      index: (integer)))
+  (variable_declaration
+    (identifier)
+    (index_expression
+      object: (identifier)
+      index: (range_expression
+        left: (integer))))
+  (variable_declaration
+    (identifier)
+    (index_expression
+      object: (identifier)
+      index: (range_expression
+        left: (integer)
+        right: (identifier))
+      sentinel: (integer)))
+  (variable_declaration
+    (identifier)
+    (builtin_function
+      (builtin_identifier)
+      (arguments
+        (builtin_type)
+        (builtin_function
+          (builtin_identifier)
+          (arguments
+            (identifier))))))
+  (variable_declaration
+    (identifier)
+    (field_expression
+      object: (field_expression
+        object: (field_expression
+          object: (builtin_function
+            (builtin_identifier)
+            (arguments
+              (string
+                (string_content))))
+          member: (identifier))
+        member: (identifier))
+      member: (identifier)))
+  (variable_declaration
+    (identifier)
+    (dereference_expression
+      (index_expression
+        object: (field_expression
+          object: (call_expression
+            function: (field_expression
+              object: (identifier)
+              member: (identifier)))
+          member: (identifier))
+        index: (integer)))))
+
+================================================================================
+Initializers
+================================================================================
+
+const p = Point{ .x = 1, .y = 2 };
+const q: Point = .{ .x = 1 };
+const r = [_]u8{ 1, 2, 3 };
+const s = .{};
+const t = [2][2]u8{ .{ 1, 2 }, .{ 3, 4 } };
+const u = error.OutOfMemory;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (struct_initializer
+      (identifier)
+      (initializer_list
+        (assignment_expression
+          left: (field_expression
+            member: (identifier))
+          right: (integer))
+        (assignment_expression
+          left: (field_expression
+            member: (identifier))
+          right: (integer)))))
+  (variable_declaration
+    (identifier)
+    type: (identifier)
+    (anonymous_struct_initializer
+      (initializer_list
+        (assignment_expression
+          left: (field_expression
+            member: (identifier))
+          right: (integer)))))
+  (variable_declaration
+    (identifier)
+    (struct_initializer
+      (array_type
+        (identifier)
+        (builtin_type))
+      (initializer_list
+        (integer)
+        (integer)
+        (integer))))
+  (variable_declaration
+    (identifier)
+    (anonymous_struct_initializer
+      (initializer_list)))
+  (variable_declaration
+    (identifier)
+    (struct_initializer
+      (array_type
+        (integer)
+        (array_type
+          (integer)
+          (builtin_type)))
+      (initializer_list
+        (anonymous_struct_initializer
+          (initializer_list
+            (integer)
+            (integer)))
+        (anonymous_struct_initializer
+          (initializer_list
+            (integer)
+            (integer))))))
+  (variable_declaration
+    (identifier)
+    (error_type
+      (identifier))))
+
+================================================================================
+Comptime and async expressions
+================================================================================
+
+const a = comptime fib(10);
+const T = @TypeOf(a);
+fn n() void {
+    var frame = async work();
+    const r = await frame;
+    resume frame;
+    _ = r;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (comptime_expression
+      (call_expression
+        function: (identifier)
+        (integer))))
+  (variable_declaration
+    (identifier)
+    (builtin_function
+      (builtin_identifier)
+      (arguments
+        (identifier))))
+  (function_declaration
+    name: (identifier)
+    (parameters)
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        (async_expression
+          (call_expression
+            function: (identifier))))
+      (variable_declaration
+        (identifier)
+        (await_expression
+          (identifier)))
+      (expression_statement
+        (resume_expression
+          (identifier)))
+      (variable_declaration
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Assembly
+================================================================================
+
+fn syscall1(number: usize, arg1: usize) usize {
+    return asm volatile ("syscall"
+        : [ret] "={rax}" (-> usize),
+        : [number] "{rax}" (number),
+          [arg1] "{rdi}" (arg1),
+        : "rcx", "r11"
+    );
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (builtin_type)))
+    type: (builtin_type)
+    body: (block
+      (expression_statement
+        (return_expression
+          (asm_expression
+            (string
+              (string_content))
+            (asm_output
+              (asm_output_item
+                (identifier)
+                (string
+                  (string_content))
+                (builtin_type))
+              (asm_input
+                (asm_input_item
+                  (identifier)
+                  (string
+                    (string_content))
+                  (identifier))
+                (asm_input_item
+                  (identifier)
+                  (string
+                    (string_content))
+                  (identifier))
+                (asm_clobbers
+                  (string
+                    (string_content))
+                  (string
+                    (string_content)))))))))))

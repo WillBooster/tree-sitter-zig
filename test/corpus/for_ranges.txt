@@ -1,0 +1,54 @@
+================================================================================
+For ranges whose end can both start an expression and continue the start
+================================================================================
+
+fn f(n: usize, x: usize) void {
+    for (0..(n)) |i| {}
+    for (0..&x) |i| {}
+    for (0..-n) |i| {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    (parameters
+      (parameter
+        name: (identifier)
+        type: (builtin_type))
+      (parameter
+        name: (identifier)
+        type: (builtin_type)))
+    type: (builtin_type)
+    body: (block
+      (labeled_statement
+        (for_statement
+          (range_expression
+            left: (integer)
+            right: (parenthesized_expression
+              (identifier)))
+          (payload
+            (identifier))
+          body: (block_expression
+            (block))))
+      (labeled_statement
+        (for_statement
+          (range_expression
+            left: (integer)
+            right: (unary_expression
+              argument: (identifier)))
+          (payload
+            (identifier))
+          body: (block_expression
+            (block))))
+      (labeled_statement
+        (for_statement
+          (range_expression
+            left: (integer)
+            right: (unary_expression
+              argument: (identifier)))
+          (payload
+            (identifier))
+          body: (block_expression
+            (block)))))))
