@@ -8,7 +8,8 @@ const oxlintResolvedConfig: OxlintConfig = structuredClone(oxlintBaseConfig.defa
 oxlintResolvedConfig.options = { ...oxlintResolvedConfig.options, typeAware: true, typeCheck: true };
 // wbfy:end oxlint-base
 
-// `tree-sitter init` writes bindings/ in its own style, and grammar.js stays identical to upstream's file.
+// `tree-sitter init` writes bindings/ in its own style. Preserve upstream conventions in grammar.js to keep
+// functional changes easy to compare when incorporating upstream updates.
 oxlintResolvedConfig.ignorePatterns = [...(oxlintResolvedConfig.ignorePatterns ?? []), 'bindings/**', 'grammar.js'];
 
 // wbfy:start oxlint-export

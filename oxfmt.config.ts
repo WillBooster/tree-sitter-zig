@@ -7,8 +7,8 @@ const oxfmtConfig = require('@willbooster/oxfmt-config');
 const oxfmtResolvedConfig: OxfmtConfig = oxfmtConfig.default ?? oxfmtConfig;
 // wbfy:end oxfmt-base
 
-// `tree-sitter generate` writes src/ and `tree-sitter init` writes bindings/ in their own style. grammar.js stays
-// identical to upstream's file, so that `diff` shows the grammar is unchanged and a later upstream version replaces it.
+// `tree-sitter generate` writes src/ and `tree-sitter init` writes bindings/ in their own style. Preserve upstream
+// formatting in grammar.js so functional changes remain easy to compare when incorporating upstream updates.
 oxfmtResolvedConfig.ignorePatterns = [
   ...(oxfmtResolvedConfig.ignorePatterns ?? []),
   'bindings/**',

@@ -109,7 +109,7 @@ well (e.g. `script/tree-sitter parse file.zig`).
 `bun run generate` records a fresh generation profile from the applicable `test/corpus` cases, then generates
 compact parser tables. It would also profile files tracked in `examples/`, but this repository tracks none: upstream
 ships neither examples nor a corpus, so the cases in `test/corpus` were written for this fork, with the trees upstream's
-packaged parser gives them, except the NUL case and the `for` range case, which pin this parser's reading. The parser also embeds metadata from `tree-sitter.json`.
+packaged parser gives them, except the NUL, `for` range, and empty-container cases, which pin this parser's reading. The parser also embeds metadata from `tree-sitter.json`.
 After changing a grammar, `tree-sitter.json`, or a corpus case, regenerate and commit `src/`.
 Profiles in `.tmp/generation-profiles/` are temporary and must not be committed. `bun run build-wasm`, `bun run build/ci`,
 and the release build regenerate the parsers before compiling them.
