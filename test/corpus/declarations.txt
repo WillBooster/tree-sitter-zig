@@ -255,3 +255,24 @@ const x = 1; // trailing
     (identifier)
     (integer))
   (comment))
+
+==================
+Empty containers
+==================
+
+const A = struct {};
+const B = opaque {};
+const C = if (true) u8 else struct {};
+const D = enum {};
+const E = union {};
+
+---
+
+(source_file
+  (variable_declaration (identifier) (struct_declaration))
+  (variable_declaration (identifier) (opaque_declaration))
+  (variable_declaration
+    (identifier)
+    (if_expression (boolean) (builtin_type) (struct_declaration)))
+  (variable_declaration (identifier) (enum_declaration))
+  (variable_declaration (identifier) (union_declaration)))

@@ -243,7 +243,7 @@ module.exports = grammar({
       'struct',
       optional(seq('(', $.expression, ')')),
       '{',
-      $._container_members,
+      optional($._container_members),
       '}',
     ),
 
@@ -251,7 +251,7 @@ module.exports = grammar({
       optional(choice('extern', 'packed')),
       'opaque',
       '{',
-      $._container_members,
+      optional($._container_members),
       '}',
     ),
 
@@ -260,7 +260,7 @@ module.exports = grammar({
       'enum',
       optional(seq('(', $.expression, ')')),
       '{',
-      $._container_members,
+      optional($._container_members),
       '}',
     ),
 
@@ -276,7 +276,7 @@ module.exports = grammar({
         ')',
       )),
       '{',
-      $._container_members,
+      optional($._container_members),
       '}',
     ),
 
