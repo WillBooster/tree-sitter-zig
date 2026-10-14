@@ -12,10 +12,10 @@ Zig grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter), forke
 [tree-sitter-grammars/tree-sitter-zig](https://github.com/tree-sitter-grammars/tree-sitter-zig). We are grateful
 to its authors and contributors. This is not an official release of that project.
 
-This fork keeps the grammar of upstream's version 1.1.2 and generates the parser with the
+This fork builds on the grammar of upstream's version 1.1.2 and generates the parser with the
 [WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries that fork's own ABI
 number (`0x57420001`) and loads only with that fork's runtime, version 2.0.0 or later: upstream's tree-sitter runtime
-rejects it. It parses as the parser in upstream's 1.1.2 packages does, with two exceptions:
+rejects it. It parses as the parser in upstream's 1.1.2 packages does, with these exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
   the one before `..`, for example `(`, `[`, `.`, `*`, `&`, `-`, or `!` (as in `for (0..(n)) |i| {}` or
@@ -26,6 +26,9 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with two 
   `~x`) or only continue one (`+`, `orelse`), and so do ranges outside `for` loops.
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
+
+- Empty `struct`, `opaque`, `enum`, and `union` declarations have no fields, instead of synthesized zero-width
+  `container_field` and `identifier` nodes.
 
 ## Usage
 
