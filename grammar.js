@@ -216,7 +216,7 @@ module.exports = grammar({
       )),
     ),
 
-    _inferred_error_union_type: $ => prec.right(2, seq('!', field('ok', $.type_expression))),
+    _inferred_error_union_type: $ => prec.right(-1, seq('!', field('ok', $.type_expression))),
 
     parameters: $ => seq('(', optionalCommaSep($.parameter), ')'),
 

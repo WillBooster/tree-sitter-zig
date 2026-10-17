@@ -28,7 +28,8 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   an error.
 
 - Boolean negation is a `unary_expression`. Inferred error unions (`!T`) occur only in function return types;
-  explicit error unions (`E!T`) retain their error and payload types.
+  their payload includes suffixes such as calls and field access (`!List(T)` or `!ns.Result`). Explicit error
+  unions (`E!T`) retain their error and payload types.
 - Empty `struct`, `opaque`, `enum`, and `union` declarations have no fields, instead of synthesized zero-width
   `container_field` and `identifier` nodes.
 

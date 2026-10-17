@@ -58,3 +58,45 @@ const Explicit = error{Failed}!void;
       (error_set_declaration
         (identifier))
       (builtin_type))))
+
+================================================================================
+Inferred error union payload suffixes
+================================================================================
+
+fn generic() !List(T) { const value = 0; }
+fn namespaced() !ns.Result { return undefined; }
+const Callback = *const fn () !List(T);
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameters)
+    (error_union_type
+      (call_expression
+        (identifier)
+        (identifier)))
+    (block
+      (variable_declaration
+        (identifier)
+        (integer))))
+  (function_declaration
+    (identifier)
+    (parameters)
+    (error_union_type
+      (field_expression
+        (identifier)
+        (identifier)))
+    (block
+      (expression_statement
+        (return_expression))))
+  (variable_declaration
+    (identifier)
+    (pointer_type
+      (function_signature
+        (parameters)
+        (error_union_type
+          (call_expression
+            (identifier)
+            (identifier)))))))
