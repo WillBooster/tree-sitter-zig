@@ -1487,6 +1487,10 @@
             "named": true
           },
           {
+            "type": "error_union_type",
+            "named": true
+          },
+          {
             "type": "if_type_expression",
             "named": true
           },
@@ -1548,6 +1552,10 @@
         "types": [
           {
             "type": "comptime_type_expression",
+            "named": true
+          },
+          {
+            "type": "error_union_type",
             "named": true
           },
           {

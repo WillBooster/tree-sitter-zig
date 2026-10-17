@@ -208,8 +208,15 @@ module.exports = grammar({
       optional($.address_space),
       optional($.link_section),
       optional($.calling_convention),
-      field('type', choice($.type_expression, $.if_type_expression, $.comptime_type_expression)),
+      field('type', choice(
+        $.type_expression,
+        $.if_type_expression,
+        $.comptime_type_expression,
+        alias($._inferred_error_union_type, $.error_union_type),
+      )),
     ),
+
+    _inferred_error_union_type: $ => prec.right(2, seq('!', field('ok', $.type_expression))),
 
     parameters: $ => seq('(', optionalCommaSep($.parameter), ')'),
 
@@ -698,7 +705,7 @@ module.exports = grammar({
     )),
 
     error_union_type: $ => prec.right(2, seq(
-      optional(field('error', $.type_expression)),
+      field('error', $.type_expression),
       '!',
       field('ok', $.type_expression),
     )),

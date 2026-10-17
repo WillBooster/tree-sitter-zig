@@ -122,8 +122,8 @@ const i = a orelse b catch c;
       left: (binary_expression
         left: (identifier)
         right: (identifier))
-      right: (error_union_type
-        ok: (identifier))))
+      right: (unary_expression
+        argument: (identifier))))
   (variable_declaration
     (identifier)
     (binary_expression
