@@ -1,0 +1,102 @@
+================================================================================
+Boolean negation and error union types
+================================================================================
+
+const flag = !true;
+const twice = !!enabled;
+const member = !value.enabled;
+const grouped = !(left and right);
+fn inferred() !bool { return !false; }
+const Callback = *const fn () !void;
+const Explicit = error{Failed}!void;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (unary_expression
+      (boolean)))
+  (variable_declaration
+    (identifier)
+    (unary_expression
+      (unary_expression
+        (identifier))))
+  (variable_declaration
+    (identifier)
+    (unary_expression
+      (field_expression
+        (identifier)
+        (identifier))))
+  (variable_declaration
+    (identifier)
+    (unary_expression
+      (parenthesized_expression
+        (binary_expression
+          (identifier)
+          (identifier)))))
+  (function_declaration
+    (identifier)
+    (parameters)
+    (error_union_type
+      (builtin_type))
+    (block
+      (expression_statement
+        (return_expression
+          (unary_expression
+            (boolean))))))
+  (variable_declaration
+    (identifier)
+    (pointer_type
+      (function_signature
+        (parameters)
+        (error_union_type
+          (builtin_type)))))
+  (variable_declaration
+    (identifier)
+    (error_union_type
+      (error_set_declaration
+        (identifier))
+      (builtin_type))))
+
+================================================================================
+Inferred error union payload suffixes
+================================================================================
+
+fn generic() !List(T) { const value = 0; }
+fn namespaced() !ns.Result { return undefined; }
+const Callback = *const fn () !List(T);
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameters)
+    (error_union_type
+      (call_expression
+        (identifier)
+        (identifier)))
+    (block
+      (variable_declaration
+        (identifier)
+        (integer))))
+  (function_declaration
+    (identifier)
+    (parameters)
+    (error_union_type
+      (field_expression
+        (identifier)
+        (identifier)))
+    (block
+      (expression_statement
+        (return_expression))))
+  (variable_declaration
+    (identifier)
+    (pointer_type
+      (function_signature
+        (parameters)
+        (error_union_type
+          (call_expression
+            (identifier)
+            (identifier)))))))
