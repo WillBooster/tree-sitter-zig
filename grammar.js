@@ -48,7 +48,7 @@ const builtinTypes = [
   'c_longlong',
   'c_ulonglong',
   'c_longdouble',
-  /(i|u)[1-9][0-9]*/,
+  /(i|u)(0|[1-9][0-9]*)/,
 ];
 
 module.exports = grammar({

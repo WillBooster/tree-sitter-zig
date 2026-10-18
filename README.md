@@ -27,6 +27,7 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
 
+- Zero-bit integers `u0` and `i0` are builtin types.
 - Boolean negation is a `unary_expression`. Inferred error unions (`!T`) occur only in function return types;
   their payload includes suffixes such as calls and field access (`!List(T)` or `!ns.Result`). Explicit error
   unions (`E!T`) retain their error and payload types.
@@ -112,7 +113,8 @@ well (e.g. `script/tree-sitter parse file.zig`).
 `bun run generate` records a fresh generation profile from the applicable `test/corpus` cases, then generates
 compact parser tables. It would also profile files tracked in `examples/`, but this repository tracks none: upstream
 ships neither examples nor a corpus, so the cases in `test/corpus` were written for this fork, with the trees upstream's
-packaged parser gives them, except the NUL, `for` range, and empty-container cases, which pin this parser's reading. The parser also embeds metadata from `tree-sitter.json`.
+packaged parser gives them, except where the parsing differences listed above apply. Those cases pin this fork's
+reading. The parser also embeds metadata from `tree-sitter.json`.
 After changing a grammar, `tree-sitter.json`, or a corpus case, regenerate and commit `src/`.
 Profiles in `.tmp/generation-profiles/` are temporary and must not be committed. `bun run build-wasm`, `bun run build/ci`,
 and the release build regenerate the parsers before compiling them.
