@@ -72,10 +72,10 @@ fi
 # A timeout depends on the machine, so it is no expected failure.
 if grep -q 'timed out' "$output"; then
   echo 'These files exceeded the parse timeout; known-failures.txt is left unchanged:' >&2
-  awk '/timed out/{print $1}' "$output" >&2
+  awk -F '\t' '/timed out/{sub(/[[:space:]]+$/, "", $1); print $1}' "$output" >&2
   exit 1
 fi
-awk '/ERROR|MISSING/{print $1}' "$output" | LC_ALL=C sort > "$failures"
+awk -F '\t' '/ERROR|MISSING/{sub(/[[:space:]]+$/, "", $1); print $1}' "$output" | LC_ALL=C sort > "$failures"
 if [[ $check == true ]]; then
   if ! diff -u script/known-failures.txt "$failures" >&2; then
     echo 'The files failing to parse differ from script/known-failures.txt (- fixed, + broken).' >&2

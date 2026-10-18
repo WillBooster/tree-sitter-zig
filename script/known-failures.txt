@@ -1,4 +1,4 @@
-examples/zig/doc/langref/Assembly
+examples/zig/doc/langref/Assembly Syntax Explained.zig
 examples/zig/doc/langref/inline_assembly.zig
 examples/zig/doc/langref/var_must_be_initialized.zig
 examples/zig/lib/compiler_rt/aarch64_outline_atomics.zig
@@ -81,12 +81,12 @@ examples/zig/test/cases/compile_errors/non-extern_function_with_var_args.zig
 examples/zig/test/cases/compile_errors/normal_string_with_newline.zig
 examples/zig/test/cases/compile_errors/suspend_inside_suspend_block.zig
 examples/zig/test/cases/llvm/f_segment_address_space_reading_and_writing.zig
-examples/zig/test/cases/safety/awaiting
-examples/zig/test/cases/safety/error
-examples/zig/test/cases/safety/invalid
-examples/zig/test/cases/safety/resuming
-examples/zig/test/cases/safety/resuming
-examples/zig/test/cases/safety/resuming
-examples/zig/test/cases/safety/resuming
+examples/zig/test/cases/safety/awaiting twice.zig
+examples/zig/test/cases/safety/error return trace across suspend points.zig
+examples/zig/test/cases/safety/invalid resume of async function.zig
+examples/zig/test/cases/safety/resuming a function which is awaiting a call.zig
+examples/zig/test/cases/safety/resuming a function which is awaiting a frame.zig
+examples/zig/test/cases/safety/resuming a non-suspended function which has been suspended and resumed.zig
+examples/zig/test/cases/safety/resuming a non-suspended function which never been suspended.zig
 examples/zig/test/cases/x86_64-linux/inline_assembly.0.zig
 examples/zig/test/standalone/stack_iterator/unwind.zig
