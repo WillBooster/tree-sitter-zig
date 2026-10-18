@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Parses real-world Zig files cloned into examples/ and rewrites script/known-failures.txt, the list of
-# files that fail to parse. With --check, fails instead when that list would change.
-
 set -euo pipefail
 
 check=false
