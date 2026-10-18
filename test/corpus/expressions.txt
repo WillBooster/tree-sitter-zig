@@ -356,16 +356,16 @@ const u = error.OutOfMemory;
       (identifier))))
 
 ================================================================================
-Comptime and async expressions
+Comptime and coroutine identifiers
 ================================================================================
 
 const a = comptime fib(10);
 const T = @TypeOf(a);
 fn n() void {
-    var frame = async work();
-    const r = await frame;
+    var frame = async();
+    const await = frame;
     resume frame;
-    _ = r;
+    _ = await;
 }
 
 --------------------------------------------------------------------------------
@@ -390,13 +390,11 @@ fn n() void {
     body: (block
       (variable_declaration
         (identifier)
-        (async_expression
-          (call_expression
-            function: (identifier))))
+        (call_expression
+          function: (identifier)))
       (variable_declaration
         (identifier)
-        (await_expression
-          (identifier)))
+        (identifier))
       (expression_statement
         (resume_expression
           (identifier)))
@@ -413,7 +411,7 @@ fn syscall1(number: usize, arg1: usize) usize {
         : [ret] "={rax}" (-> usize),
         : [number] "{rax}" (number),
           [arg1] "{rdi}" (arg1),
-        : "rcx", "r11"
+        : clobbers
     );
 }
 
@@ -454,7 +452,4 @@ fn syscall1(number: usize, arg1: usize) usize {
                     (string_content))
                   (identifier))
                 (asm_clobbers
-                  (string
-                    (string_content))
-                  (string
-                    (string_content)))))))))))
+                  (identifier))))))))))

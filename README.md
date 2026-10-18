@@ -27,6 +27,9 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
 
+- Error sets are accepted directly as container field types, and pointer and slice element types may be conditional.
+- `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
+  initializer, as in Zig 0.16.
 - Zero-bit integers `u0` and `i0` are builtin types.
 - Boolean negation is a `unary_expression`. Inferred error unions (`!T`) occur only in function return types;
   their payload includes suffixes such as calls and field access (`!List(T)` or `!ns.Result`). Explicit error
@@ -126,8 +129,9 @@ and the release build regenerate the parsers before compiling them.
   edits each corpus case at random, reparses it, undoes the edits, and reparses again. `TREE_SITTER_SEED`,
   `TREE_SITTER_ITERATIONS`, and `TREE_SITTER_EDITS` run other or more edits;
 - a check that the real-world Zig files in `examples/` fail to parse exactly as listed in
-  `script/known-failures.txt`. The first run clones the repositories. The example repositories are pinned to commits in
-  `script/parse-examples`. After a grammar change or a moved pin alters that list, `script/parse-examples` rewrites it;
+  `script/known-failures.txt`, while every library file from the pinned Zig 0.16 release must parse without errors.
+  The older Zig corpus retains coverage of unsupported syntax. The first run fetches the repositories and the
+  checksum-pinned Zig source archive. Their revisions are pinned in `script/parse-examples`. After a grammar change or a moved pin alters that list, `script/parse-examples` rewrites it;
   review its diff before committing;
 - a performance check (`test/unit/performance.test.ts`) that recovering from an error on each line takes linear
   time, since consumers parse files while they are being edited. It loads the Wasm build through

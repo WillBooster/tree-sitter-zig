@@ -12,14 +12,6 @@
         "named": true
       },
       {
-        "type": "async_expression",
-        "named": true
-      },
-      {
-        "type": "await_expression",
-        "named": true
-      },
-      {
         "type": "binary_expression",
         "named": true
       },
@@ -379,15 +371,11 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
-      "required": false,
+      "multiple": false,
+      "required": true,
       "types": [
         {
-          "type": "multiline_string",
-          "named": true
-        },
-        {
-          "type": "string",
+          "type": "expression",
           "named": true
         }
       ]
@@ -606,36 +594,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "async_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "await_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1077,6 +1035,10 @@
             "named": true
           },
           {
+            "type": "error_set_declaration",
+            "named": true
+          },
+          {
             "type": "false",
             "named": false
           },
@@ -1100,6 +1062,10 @@
         "types": [
           {
             "type": "comptime_type_expression",
+            "named": true
+          },
+          {
+            "type": "error_set_declaration",
             "named": true
           },
           {
@@ -2041,6 +2007,10 @@
         {
           "type": "expression",
           "named": true
+        },
+        {
+          "type": "if_type_expression",
+          "named": true
         }
       ]
     }
@@ -2126,6 +2096,10 @@
         },
         {
           "type": "byte_alignment",
+          "named": true
+        },
+        {
+          "type": "if_type_expression",
           "named": true
         },
         {
@@ -2857,14 +2831,6 @@
   },
   {
     "type": "asm",
-    "named": false
-  },
-  {
-    "type": "async",
-    "named": false
-  },
-  {
-    "type": "await",
     "named": false
   },
   {

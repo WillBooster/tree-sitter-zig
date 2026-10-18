@@ -1,0 +1,109 @@
+================================================================================
+Current Zig type and assembly syntax
+================================================================================
+
+const State = struct { direct: error{Invalid} };
+const Tuple = struct { error{Invalid}, u8 };
+const enabled = true;
+const Slice = []if (enabled) u8 else u16;
+const Pointer = *if (enabled) u8 else u16;
+fn run(async: usize) usize {
+    const await = async;
+    return await;
+}
+fn barrier() void {
+    const clobbers = .{ .memory = true };
+    asm volatile ("" ::: clobbers);
+    asm volatile ("" ::: "memory");
+    asm volatile ("" ::: .{ .memory = true });
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (container_field
+        (identifier)
+        (error_set_declaration
+          (identifier)))))
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (container_field
+        (error_set_declaration
+          (identifier)))
+      (container_field
+        (builtin_type))))
+  (variable_declaration
+    (identifier)
+    (boolean))
+  (variable_declaration
+    (identifier)
+    (slice_type
+      (if_type_expression
+        (identifier)
+        (builtin_type)
+        (builtin_type))))
+  (variable_declaration
+    (identifier)
+    (pointer_type
+      (if_type_expression
+        (identifier)
+        (builtin_type)
+        (builtin_type))))
+  (function_declaration
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (variable_declaration
+        (identifier)
+        (identifier))
+      (expression_statement
+        (return_expression
+          (identifier)))))
+  (function_declaration
+    (identifier)
+    (parameters)
+    (builtin_type)
+    (block
+      (variable_declaration
+        (identifier)
+        (anonymous_struct_initializer
+          (initializer_list
+            (assignment_expression
+              (field_expression
+                (identifier))
+              (boolean)))))
+      (expression_statement
+        (asm_expression
+          (string)
+          (asm_output
+            (asm_input
+              (asm_clobbers
+                (identifier))))))
+      (expression_statement
+        (asm_expression
+          (string)
+          (asm_output
+            (asm_input
+              (asm_clobbers
+                (string
+                  (string_content)))))))
+      (expression_statement
+        (asm_expression
+          (string)
+          (asm_output
+            (asm_input
+              (asm_clobbers
+                (anonymous_struct_initializer
+                  (initializer_list
+                    (assignment_expression
+                      (field_expression
+                        (identifier))
+                      (boolean))))))))))))

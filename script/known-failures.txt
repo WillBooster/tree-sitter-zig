@@ -1,4 +1,33 @@
+examples/zig/doc/langref/Assembly Syntax Explained.zig
+examples/zig/doc/langref/inline_assembly.zig
 examples/zig/doc/langref/var_must_be_initialized.zig
+examples/zig/lib/compiler_rt/aarch64_outline_atomics.zig
+examples/zig/lib/std/os/linux/arm64.zig
+examples/zig/lib/std/os/linux/mips.zig
+examples/zig/lib/std/os/linux/mips64.zig
+examples/zig/lib/std/os/linux/powerpc.zig
+examples/zig/lib/std/os/linux/powerpc64.zig
+examples/zig/lib/std/os/linux/sparc64.zig
+examples/zig/lib/std/os/linux/x86.zig
+examples/zig/lib/std/os/linux/x86_64.zig
+examples/zig/lib/std/os/plan9/x86_64.zig
+examples/zig/lib/std/start.zig
+examples/zig/lib/std/valgrind.zig
+examples/zig/lib/std/zig/system/x86.zig
+examples/zig/test/behavior/align.zig
+examples/zig/test/behavior/async_fn.zig
+examples/zig/test/behavior/await_struct.zig
+examples/zig/test/cases/compile_errors/async/async_function_depends_on_its_own_frame.zig
+examples/zig/test/cases/compile_errors/async/async_function_indirectly_depends_on_its_own_frame.zig
+examples/zig/test/cases/compile_errors/async/const_frame_cast_to_anyframe.zig
+examples/zig/test/cases/compile_errors/async/indirect_recursion_of_async_functions_detected.zig
+examples/zig/test/cases/compile_errors/async/invalid_suspend_in_exported_function.zig
+examples/zig/test/cases/compile_errors/async/returning_error_from_void_async_function.zig
+examples/zig/test/cases/compile_errors/async/runtime-known_async_function_called.zig
+examples/zig/test/cases/compile_errors/async/runtime-known_function_called_with_async_keyword.zig
+examples/zig/test/cases/compile_errors/async/wrong_frame_type_used_for_async_call.zig
+examples/zig/test/cases/compile_errors/async/wrong_type_for_result_ptr_to_asyncCall.zig
+examples/zig/test/cases/compile_errors/combination_of_nosuspend_and_async.zig
 examples/zig/test/cases/compile_errors/const_is_a_statement_not_an_expression.zig
 examples/zig/test/cases/compile_errors/empty_for_loop_body.zig
 examples/zig/test/cases/compile_errors/empty_if_body.zig
@@ -50,3 +79,14 @@ examples/zig/test/cases/compile_errors/invalid_underscore_placement_in_int_liter
 examples/zig/test/cases/compile_errors/missing_digit_after_base.zig
 examples/zig/test/cases/compile_errors/non-extern_function_with_var_args.zig
 examples/zig/test/cases/compile_errors/normal_string_with_newline.zig
+examples/zig/test/cases/compile_errors/suspend_inside_suspend_block.zig
+examples/zig/test/cases/llvm/f_segment_address_space_reading_and_writing.zig
+examples/zig/test/cases/safety/awaiting twice.zig
+examples/zig/test/cases/safety/error return trace across suspend points.zig
+examples/zig/test/cases/safety/invalid resume of async function.zig
+examples/zig/test/cases/safety/resuming a function which is awaiting a call.zig
+examples/zig/test/cases/safety/resuming a function which is awaiting a frame.zig
+examples/zig/test/cases/safety/resuming a non-suspended function which has been suspended and resumed.zig
+examples/zig/test/cases/safety/resuming a non-suspended function which never been suspended.zig
+examples/zig/test/cases/x86_64-linux/inline_assembly.0.zig
+examples/zig/test/standalone/stack_iterator/unwind.zig
