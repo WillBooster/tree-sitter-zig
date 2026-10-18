@@ -48,7 +48,10 @@ clone tigerbeetle https://github.com/tigerbeetle/tigerbeetle 530105887eb4b4b9030
 archive=.tmp/zig-0.16.0.tar.xz
 mkdir -p .tmp
 if [[ ! -f $archive ]]; then
-  curl --fail --location --retry 3 https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz --output "$archive.download"
+  trap 'rm -f "$archive.download"' EXIT
+  curl --fail --silent --show-error --location --retry 3 --connect-timeout 30 \
+    --speed-limit 1024 --speed-time 60 \
+    https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz --output "$archive.download"
   mv "$archive.download" "$archive"
 fi
 node - "$archive" <<'JS'
@@ -70,7 +73,7 @@ output=$(mktemp)
 failures=$(mktemp)
 trap 'rm -f "$files" "$output" "$failures"' EXIT
 
-find examples/zig examples/tigerbeetle examples/zig-current/lib -type f -name '*.zig' -print | LC_ALL=C sort > "$files"
+find examples -type f -name '*.zig' -print | LC_ALL=C sort > "$files"
 
 # The CLI exits non-zero whenever a file fails, so the output decides success. `--time` makes it print
 # a line for each file, including files that exceed `--timeout` (30 s), which bounds a runaway parse. The largest
