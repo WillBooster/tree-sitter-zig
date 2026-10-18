@@ -45,32 +45,35 @@ export TREE_SITTER_LIBDIR=$PWD/.tmp/tree-sitter-lib
 clone zig https://github.com/ziglang/zig cf90dfd3098bef5b3c22d5ab026173b3c357f2dd
 clone tigerbeetle https://github.com/tigerbeetle/tigerbeetle 530105887eb4b4b9030f588ed543455db8f3fdb2
 
-archive=.tmp/zig-0.16.0.tar.xz
+zig_version=0.16.0
+# Keep the source version and SHA-256 paired with https://ziglang.org/download/index.json.
+zig_sha256=43186959edc87d5c7a1be7b7d2a25efffd22ce5807c7af99067f86f99641bfdf
+archive=.tmp/zig-$zig_version.tar.xz
+url=https://ziglang.org/download/$zig_version/zig-$zig_version.tar.xz
 mkdir -p .tmp
-trap 'rm -f "$archive.download"' EXIT
 candidate=$archive
 if [[ ! -f $archive ]]; then
-  candidate=$archive.download
+  candidate=$(mktemp "$archive.download.XXXXXX")
+  trap 'rm -f "$candidate"' EXIT
   curl --fail --silent --show-error --location --retry 3 --connect-timeout 30 \
     --speed-limit 1024 --speed-time 60 \
-    https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz --output "$archive.download"
+    "$url" --output "$candidate"
 fi
-node - "$candidate" <<'JS'
+node - "$candidate" "$zig_sha256" "$url" <<'JS'
 const { createHash } = require('node:crypto');
 const { readFileSync, unlinkSync } = require('node:fs');
 const assert = require('node:assert/strict');
 const file = process.argv[2];
-const valid = createHash('sha256').update(readFileSync(file)).digest('hex') ===
-  '43186959edc87d5c7a1be7b7d2a25efffd22ce5807c7af99067f86f99641bfdf';
+const valid = createHash('sha256').update(readFileSync(file)).digest('hex') === process.argv[3];
 if (!valid) unlinkSync(file);
-assert(valid, `Zig source checksum mismatch: removed ${file}; rerun to download again`);
+assert(valid, `Zig source checksum mismatch for ${process.argv[4]}: removed ${file}; retry the download. If it repeats, verify zig_version and zig_sha256 in script/parse-examples against the official download index.`);
 JS
 if [[ $candidate != "$archive" ]]; then
   mv "$candidate" "$archive"
 fi
 rm -rf examples/zig-current
 mkdir -p examples/zig-current
-tar -xJf "$archive" --strip-components=1 -C examples/zig-current zig-0.16.0/lib
+tar -xJf "$archive" --strip-components=1 -C examples/zig-current "zig-$zig_version/lib"
 
 files=$(mktemp)
 output=$(mktemp)
