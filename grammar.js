@@ -124,9 +124,9 @@ module.exports = grammar({
         seq(
           field('name', choice($.identifier, $._reserved_identifier, alias($.builtin_type, $.identifier))),
           ':',
-          field('type', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression)),
+          field('type', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
         ),
-        field('name', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression)),
+        field('name', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
       ),
       optional($.byte_alignment),
       optional(seq('=', $.expression)),
@@ -420,8 +420,6 @@ module.exports = grammar({
       $.unary_expression,
       $.binary_expression,
       $.comptime_expression,
-      $.async_expression,
-      $.await_expression,
       $.nosuspend_expression,
       $.continue_expression,
       $.resume_expression,
@@ -461,7 +459,7 @@ module.exports = grammar({
       $.expression,
       ')',
     ),
-    asm_clobbers: $ => seq(':', optionalCommaSep(choice($.string, $.multiline_string))),
+    asm_clobbers: $ => seq(':', $.expression),
 
     if_expression: $ => prec.right(seq(
       $._if_prefix,
@@ -544,10 +542,6 @@ module.exports = grammar({
     },
 
     comptime_expression: $ => prec.right(seq('comptime', $.expression)),
-
-    async_expression: $ => prec.right(seq('async', $.expression)),
-
-    await_expression: $ => prec.right(seq('await', $.expression)),
 
     nosuspend_expression: $ => prec.right(seq('nosuspend', $.expression)),
 
@@ -667,7 +661,7 @@ module.exports = grammar({
         'volatile',
         'allowzero',
       )),
-      $.type_expression,
+      choice($.type_expression, $.if_type_expression),
     )),
 
     pointer_type: $ => prec.right(1, seq(
@@ -693,7 +687,7 @@ module.exports = grammar({
         'volatile',
         'allowzero',
       )),
-      $.type_expression,
+      choice($.type_expression, $.if_type_expression),
     )),
 
     array_type: $ => prec(1, seq(

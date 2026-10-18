@@ -129,8 +129,6 @@
 ] @keyword.type
 
 [
-  "async"
-  "await"
   "suspend"
   "nosuspend"
   "resume"
