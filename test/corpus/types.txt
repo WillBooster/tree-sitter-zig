@@ -299,3 +299,22 @@ fn parse(text: []const u8) ParseError!u32 {
       (expression_statement
         (return_expression
           (integer))))))
+
+================================================================================
+Zero-bit integer types and identifier boundaries
+================================================================================
+
+const unsigned: u0 = 0;
+const signed: i0 = 0;
+const one: u1 = 0;
+const named: u0Value = 0;
+const escaped: @"i0" = 0;
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration (identifier) type: (builtin_type) (integer))
+  (variable_declaration (identifier) type: (builtin_type) (integer))
+  (variable_declaration (identifier) type: (builtin_type) (integer))
+  (variable_declaration (identifier) type: (identifier) (integer))
+  (variable_declaration (identifier) type: (identifier (string (string_content))) (integer)))
