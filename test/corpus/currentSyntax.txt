@@ -3,6 +3,7 @@ Current Zig type and assembly syntax
 ================================================================================
 
 const State = struct { direct: error{Invalid} };
+const Tuple = struct { error{Invalid}, u8 };
 const enabled = true;
 const Slice = []if (enabled) u8 else u16;
 const Pointer = *if (enabled) u8 else u16;
@@ -13,6 +14,7 @@ fn run(async: usize) usize {
 fn barrier() void {
     const clobbers = .{ .memory = true };
     asm volatile ("" ::: clobbers);
+    asm volatile ("" ::: "memory");
     asm volatile ("" ::: .{ .memory = true });
 }
 
@@ -26,6 +28,14 @@ fn barrier() void {
         (identifier)
         (error_set_declaration
           (identifier)))))
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (container_field
+        (error_set_declaration
+          (identifier)))
+      (container_field
+        (builtin_type))))
   (variable_declaration
     (identifier)
     (boolean))
@@ -77,6 +87,14 @@ fn barrier() void {
             (asm_input
               (asm_clobbers
                 (identifier))))))
+      (expression_statement
+        (asm_expression
+          (string)
+          (asm_output
+            (asm_input
+              (asm_clobbers
+                (string
+                  (string_content)))))))
       (expression_statement
         (asm_expression
           (string)

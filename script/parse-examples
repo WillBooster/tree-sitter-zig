@@ -45,12 +45,32 @@ export TREE_SITTER_LIBDIR=$PWD/.tmp/tree-sitter-lib
 clone zig https://github.com/ziglang/zig cf90dfd3098bef5b3c22d5ab026173b3c357f2dd
 clone tigerbeetle https://github.com/tigerbeetle/tigerbeetle 530105887eb4b4b9030f588ed543455db8f3fdb2
 
+archive=.tmp/zig-0.16.0.tar.xz
+mkdir -p .tmp
+if [[ ! -f $archive ]]; then
+  curl --fail --location --retry 3 https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz --output "$archive.download"
+  mv "$archive.download" "$archive"
+fi
+node - "$archive" <<'JS'
+const { createHash } = require('node:crypto');
+const { readFileSync } = require('node:fs');
+const assert = require('node:assert/strict');
+assert.equal(
+  createHash('sha256').update(readFileSync(process.argv[2])).digest('hex'),
+  '43186959edc87d5c7a1be7b7d2a25efffd22ce5807c7af99067f86f99641bfdf',
+  'Zig 0.16.0 source archive checksum mismatch',
+);
+JS
+rm -rf examples/zig-current
+mkdir -p examples/zig-current
+tar -xJf "$archive" --strip-components=1 -C examples/zig-current zig-0.16.0/lib
+
 files=$(mktemp)
 output=$(mktemp)
 failures=$(mktemp)
 trap 'rm -f "$files" "$output" "$failures"' EXIT
 
-find examples -type f -name '*.zig' -print | LC_ALL=C sort > "$files"
+find examples/zig examples/tigerbeetle examples/zig-current/lib -type f -name '*.zig' -print | LC_ALL=C sort > "$files"
 
 # The CLI exits non-zero whenever a file fails, so the output decides success. `--time` makes it print
 # a line for each file, including files that exceed `--timeout` (30 s), which bounds a runaway parse. The largest
@@ -76,6 +96,11 @@ if grep -q 'timed out' "$output"; then
   exit 1
 fi
 awk -F '\t' '/ERROR|MISSING/{sub(/[[:space:]]+$/, "", $1); print $1}' "$output" | LC_ALL=C sort > "$failures"
+if grep -q '^examples/zig-current/' "$failures"; then
+  echo 'Current Zig library files must parse without errors:' >&2
+  grep '^examples/zig-current/' "$failures" >&2
+  exit 1
+fi
 if [[ $check == true ]]; then
   if ! diff -u script/known-failures.txt "$failures" >&2; then
     echo 'The files failing to parse differ from script/known-failures.txt (- fixed, + broken).' >&2
