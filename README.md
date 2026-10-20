@@ -14,7 +14,7 @@ to its authors and contributors. This is not an official release of that project
 
 This fork builds on the grammar of upstream's version 1.1.2 and generates the parser with the
 [WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries that fork's own ABI
-number (`0x57420001`) and loads only with that fork's runtime, version 2.0.0 or later: upstream's tree-sitter runtime
+number (`0x57420006`) and loads only with that fork's runtime, version 7.0.5 or later in the 7.x series: upstream's tree-sitter runtime
 rejects it. It parses as the parser in upstream's 1.1.2 packages does, with these exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
@@ -40,7 +40,8 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
 ## Usage
 
 The npm package ships `tree-sitter-zig.wasm` for
-[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 2.0.0 or later, which runs in Node.js, Bun, browsers, and Cloudflare Workers. In Node.js and Bun, load the grammar from its path:
+[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 7.0.5 or later in the 7.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
+In Node.js and Bun, load the grammar from its path:
 
 ```js
 import { fileURLToPath } from 'node:url';
@@ -86,8 +87,8 @@ fuzzed with:
 
 ```toml
 [dependencies]
-tree-sitter = { package = "willbooster-tree-sitter", version = "2" }
-tree-sitter-zig = { package = "willbooster-tree-sitter-zig", version = "1" }
+tree-sitter = { package = "willbooster-tree-sitter", version = "7.0.5" }
+tree-sitter-zig = { package = "willbooster-tree-sitter-zig", version = "2" }
 ```
 
 ```rust
