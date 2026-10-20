@@ -36,3 +36,24 @@ const ALL_CAPS = ordinary;
     parser.delete();
   }
 });
+
+test('highlights qualified parameter types without treating value members as types', () => {
+  const parser = new Parser();
+  parser.setLanguage(language);
+  const tree = parser.parse(`const Callback = fn (arg: api.inner.callback) void;
+pub fn inspect(arg: api.one, nested: api.inner.two, plain: direct) void {
+    const value = api.inner.value;
+}
+`)!;
+  try {
+    expect(tree.rootNode.hasError).toBe(false);
+    const types = highlights
+      .captures(tree.rootNode)
+      .filter(({ name }) => name === 'type')
+      .map(({ node }) => node.text);
+    expect(types).toEqual(['Callback', 'callback', 'one', 'two', 'direct']);
+  } finally {
+    tree.delete();
+    parser.delete();
+  }
+});
