@@ -12,10 +12,6 @@
 (parameter
   type: (identifier) @type)
 
-(parameter
-  type: (field_expression
-    member: (identifier) @type))
-
 ((identifier) @type
   (#match? @type "^[A-Z_][a-zA-Z0-9_]*"))
 
@@ -77,6 +73,10 @@
       left: (field_expression
               .
               member: (identifier) @variable.member)))
+
+(parameter
+  type: (field_expression
+    member: (identifier) @type))
 
 ; Functions
 

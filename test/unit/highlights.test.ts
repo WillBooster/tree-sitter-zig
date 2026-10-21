@@ -1,5 +1,7 @@
 import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, test } from 'vitest';
 
@@ -38,13 +40,17 @@ const ALL_CAPS = ordinary;
 });
 
 test('highlights qualified parameter types without treating value members as types', () => {
+  const root = fileURLToPath(new URL('../..', import.meta.url));
+  mkdirSync(path.join(root, '.tmp'), { recursive: true });
+  const directory = mkdtempSync(path.join(root, '.tmp/qualified-highlights-'));
   const parser = new Parser();
   parser.setLanguage(language);
-  const tree = parser.parse(`const Callback = fn (arg: api.inner.callback) void;
+  const source = `const Callback = fn (arg: api.inner.callback) void;
 pub fn inspect(arg: api.one, nested: api.inner.two, plain: direct) void {
     const value = api.inner.value;
 }
-`)!;
+`;
+  const tree = parser.parse(source)!;
   try {
     expect(tree.rootNode.hasError).toBe(false);
     const types = highlights
@@ -52,8 +58,20 @@ pub fn inspect(arg: api.one, nested: api.inner.two, plain: direct) void {
       .filter(({ name }) => name === 'type')
       .map(({ node }) => node.text);
     expect(types).toEqual(['Callback', 'callback', 'one', 'two', 'direct']);
+    const file = path.join(directory, 'input.zig');
+    writeFileSync(file, source);
+    const html = execFileSync(
+      path.join(root, 'script/tree-sitter'),
+      ['highlight', '--html', '--layout', 'fragment', '--style', 'minimal', file],
+      { cwd: root, encoding: 'utf8' }
+    );
+    for (const type of ['callback', 'one', 'two', 'direct']) {
+      expect(html).toContain(`<span class='type'>${type}</span>`);
+    }
+    expect(html).toContain(`<span class='variable'>value</span>`);
   } finally {
     tree.delete();
     parser.delete();
+    rmSync(directory, { recursive: true, force: true });
   }
 });
