@@ -74,6 +74,10 @@
               .
               member: (identifier) @variable.member)))
 
+(parameter
+  type: (field_expression
+    member: (identifier) @type))
+
 ; Functions
 
 (builtin_identifier) @function.builtin
