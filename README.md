@@ -36,6 +36,8 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   unions (`E!T`) retain their error and payload types.
 - Empty `struct`, `opaque`, `enum`, and `union` declarations have no fields, instead of synthesized zero-width
   `container_field` and `identifier` nodes.
+- Assignments occur in statement positions and loop continuations, rather than inside ordinary expressions.
+  Struct field initializers produce `field_initializer` nodes with `name` and `value` fields.
 
 ## Usage
 

@@ -1,0 +1,73 @@
+================================================================================
+Assignment statement boundaries
+================================================================================
+
+test {
+    defer left += 1;
+    errdefer left, right = .{ right, left };
+    if (flag) left, right = .{ 1, 2 } else left += 3;
+    while (left < 4) : (left, right = .{ right, left }) right += left;
+    switch (left) {
+        0 => left = 1,
+        else => right += 1,
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (test_declaration
+    (block
+      (defer_statement
+        (expression_statement
+          (assignment_expression
+            (identifier)
+            (integer))))
+      (errdefer_statement
+        (expression_statement
+          (assignment_expression
+            (identifier)
+            (identifier)
+            (anonymous_struct_initializer
+              (initializer_list
+                (identifier)
+                (identifier))))))
+      (if_statement
+        (identifier)
+        (assignment_expression
+          (identifier)
+          (identifier)
+          (anonymous_struct_initializer
+            (initializer_list
+              (integer)
+              (integer))))
+        (else_clause
+          (variable_declaration
+            (identifier)
+            (integer))))
+      (labeled_statement
+        (while_statement
+          (binary_expression
+            (identifier)
+            (integer))
+          (assignment_expression
+            (identifier)
+            (identifier)
+            (anonymous_struct_initializer
+              (initializer_list
+                (identifier)
+                (identifier))))
+          (assignment_expression
+            (identifier)
+            (identifier))))
+      (switch_expression
+        (identifier)
+        (switch_case
+          (integer)
+          (assignment_expression
+            (identifier)
+            (integer)))
+        (switch_case
+          (assignment_expression
+            (identifier)
+            (integer)))))))

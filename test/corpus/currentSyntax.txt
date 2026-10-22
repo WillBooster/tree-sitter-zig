@@ -76,9 +76,8 @@ fn barrier() void {
         (identifier)
         (anonymous_struct_initializer
           (initializer_list
-            (assignment_expression
-              (field_expression
-                (identifier))
+            (field_initializer
+              (identifier)
               (boolean)))))
       (expression_statement
         (asm_expression
@@ -103,7 +102,6 @@ fn barrier() void {
               (asm_clobbers
                 (anonymous_struct_initializer
                   (initializer_list
-                    (assignment_expression
-                      (field_expression
-                        (identifier))
+                    (field_initializer
+                      (identifier)
                       (boolean))))))))))))

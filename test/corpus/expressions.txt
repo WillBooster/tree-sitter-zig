@@ -302,23 +302,20 @@ const u = error.OutOfMemory;
     (struct_initializer
       (identifier)
       (initializer_list
-        (assignment_expression
-          left: (field_expression
-            member: (identifier))
-          right: (integer))
-        (assignment_expression
-          left: (field_expression
-            member: (identifier))
-          right: (integer)))))
+        (field_initializer
+          name: (identifier)
+          value: (integer))
+        (field_initializer
+          name: (identifier)
+          value: (integer)))))
   (variable_declaration
     (identifier)
     type: (identifier)
     (anonymous_struct_initializer
       (initializer_list
-        (assignment_expression
-          left: (field_expression
-            member: (identifier))
-          right: (integer)))))
+        (field_initializer
+          name: (identifier)
+          value: (integer)))))
   (variable_declaration
     (identifier)
     (struct_initializer
