@@ -1,6 +1,7 @@
-import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+
+import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
