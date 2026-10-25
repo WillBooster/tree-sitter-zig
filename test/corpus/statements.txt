@@ -19,7 +19,7 @@ fn f(opt: ?u32, res: anyerror!u32) u32 {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (nullable_type
@@ -100,7 +100,7 @@ fn g(items: []const u8) usize {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (slice_type
@@ -224,7 +224,7 @@ fn h(x: u8, v: Value) u8 {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))
@@ -306,7 +306,7 @@ fn k(allocator: Allocator) !void {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (identifier)))
@@ -394,7 +394,7 @@ fn m() void {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters)
+    parameters: (parameters)
     type: (builtin_type)
     body: (block
       (variable_declaration
