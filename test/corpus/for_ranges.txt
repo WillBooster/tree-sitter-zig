@@ -13,7 +13,7 @@ fn f(n: usize, x: usize) void {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))

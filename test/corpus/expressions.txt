@@ -382,7 +382,7 @@ fn n() void {
         (identifier))))
   (function_declaration
     name: (identifier)
-    (parameters)
+    parameters: (parameters)
     type: (builtin_type)
     body: (block
       (variable_declaration
@@ -417,7 +417,7 @@ fn syscall1(number: usize, arg1: usize) usize {
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))

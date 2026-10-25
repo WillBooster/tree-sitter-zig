@@ -74,7 +74,7 @@ extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
 (source_file
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))
@@ -90,7 +90,7 @@ extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
             right: (identifier))))))
   (function_declaration
     name: (identifier)
-    (parameters)
+    parameters: (parameters)
     type: (error_union_type
       ok: (builtin_type))
     body: (block
@@ -105,7 +105,7 @@ extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
         (identifier))))
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))
@@ -128,7 +128,7 @@ extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
           (identifier)))))
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))
@@ -144,7 +144,7 @@ extern "c" fn write(fd: c_int, buf: [*]const u8, len: usize) isize;
     (string
       (string_content))
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (builtin_type))
