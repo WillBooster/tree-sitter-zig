@@ -34,7 +34,7 @@ const Tuple = struct { u8, bool };
         (integer))
       (function_declaration
         name: (identifier)
-        (parameters
+        parameters: (parameters
           (parameter
             name: (identifier)
             type: (identifier)))
@@ -122,7 +122,7 @@ const Raw = extern union {
         name: (identifier))
       (function_declaration
         name: (identifier)
-        (parameters
+        parameters: (parameters
           (parameter
             name: (identifier)
             type: (identifier)))
@@ -253,7 +253,7 @@ fn parse(text: []const u8) ParseError!u32 {
     (identifier)
     (pointer_type
       (function_signature
-        (parameters
+        parameters: (parameters
           (parameter
             name: (identifier)
             type: (nullable_type
@@ -269,7 +269,7 @@ fn parse(text: []const u8) ParseError!u32 {
   (variable_declaration
     (identifier)
     (function_signature
-      (parameters
+      parameters: (parameters
         (parameter
           name: (identifier)
           type: (builtin_type))
@@ -278,7 +278,7 @@ fn parse(text: []const u8) ParseError!u32 {
       type: (identifier)))
   (function_declaration
     name: (identifier)
-    (parameters
+    parameters: (parameters
       (parameter
         name: (identifier)
         type: (slice_type

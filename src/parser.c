@@ -15,10 +15,10 @@
 #define ALIAS_COUNT 1
 #define TOKEN_COUNT 152
 #define EXTERNAL_TOKEN_COUNT 0
-#define FIELD_COUNT 17
+#define FIELD_COUNT 18
 #define MAX_ALIAS_SEQUENCE_LENGTH 11
 #define MAX_RESERVED_WORD_SET_SIZE 0
-#define PRODUCTION_ID_COUNT 74
+#define PRODUCTION_ID_COUNT 76
 #define SUPERTYPE_COUNT 4
 
 enum ts_symbol_identifiers {
@@ -1962,10 +1962,11 @@ enum ts_field_identifiers {
   field_object = 11,
   field_ok = 12,
   field_operator = 13,
-  field_right = 14,
-  field_sentinel = 15,
-  field_type = 16,
-  field_value = 17,
+  field_parameters = 14,
+  field_right = 15,
+  field_sentinel = 16,
+  field_type = 17,
+  field_value = 18,
 };
 
 static const char * const ts_field_names[] = {
@@ -1983,6 +1984,7 @@ static const char * const ts_field_names[] = {
   [field_object] = "object",
   [field_ok] = "ok",
   [field_operator] = "operator",
+  [field_parameters] = "parameters",
   [field_right] = "right",
   [field_sentinel] = "sentinel",
   [field_type] = "type",
@@ -1990,272 +1992,307 @@ static const char * const ts_field_names[] = {
 };
 
 static const TSMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
-  [1] = {.index = 0, .length = 2},
-  [2] = {.index = 2, .length = 1},
-  [3] = {.index = 3, .length = 1},
-  [4] = {.index = 4, .length = 2},
-  [5] = {.index = 6, .length = 1},
-  [6] = {.index = 7, .length = 3},
-  [7] = {.index = 10, .length = 1},
-  [8] = {.index = 0, .length = 2},
-  [9] = {.index = 11, .length = 3},
-  [10] = {.index = 14, .length = 1},
-  [11] = {.index = 15, .length = 1},
-  [13] = {.index = 16, .length = 1},
-  [14] = {.index = 17, .length = 2},
-  [15] = {.index = 19, .length = 3},
-  [16] = {.index = 22, .length = 1},
-  [17] = {.index = 23, .length = 1},
-  [18] = {.index = 24, .length = 2},
-  [19] = {.index = 26, .length = 1},
-  [20] = {.index = 27, .length = 1},
-  [21] = {.index = 28, .length = 2},
-  [22] = {.index = 30, .length = 1},
-  [23] = {.index = 31, .length = 2},
-  [24] = {.index = 33, .length = 1},
-  [25] = {.index = 34, .length = 2},
-  [26] = {.index = 36, .length = 3},
-  [27] = {.index = 39, .length = 2},
-  [28] = {.index = 41, .length = 2},
-  [29] = {.index = 31, .length = 2},
-  [30] = {.index = 43, .length = 1},
-  [31] = {.index = 44, .length = 2},
-  [32] = {.index = 46, .length = 3},
-  [33] = {.index = 49, .length = 2},
-  [34] = {.index = 49, .length = 2},
-  [35] = {.index = 51, .length = 1},
-  [36] = {.index = 52, .length = 1},
-  [37] = {.index = 53, .length = 1},
-  [38] = {.index = 54, .length = 2},
-  [39] = {.index = 56, .length = 3},
-  [40] = {.index = 59, .length = 1},
-  [41] = {.index = 60, .length = 2},
-  [42] = {.index = 62, .length = 2},
-  [43] = {.index = 64, .length = 1},
-  [44] = {.index = 65, .length = 2},
-  [45] = {.index = 67, .length = 1},
-  [46] = {.index = 68, .length = 2},
-  [47] = {.index = 70, .length = 1},
-  [48] = {.index = 71, .length = 1},
-  [49] = {.index = 72, .length = 2},
-  [50] = {.index = 74, .length = 3},
-  [51] = {.index = 77, .length = 2},
-  [52] = {.index = 79, .length = 1},
-  [53] = {.index = 80, .length = 3},
-  [54] = {.index = 83, .length = 2},
-  [55] = {.index = 85, .length = 1},
-  [56] = {.index = 86, .length = 4},
-  [57] = {.index = 90, .length = 1},
-  [58] = {.index = 91, .length = 1},
-  [59] = {.index = 92, .length = 2},
-  [60] = {.index = 94, .length = 1},
-  [61] = {.index = 95, .length = 3},
-  [62] = {.index = 98, .length = 2},
-  [63] = {.index = 100, .length = 1},
-  [64] = {.index = 101, .length = 2},
-  [65] = {.index = 103, .length = 3},
-  [66] = {.index = 106, .length = 2},
-  [67] = {.index = 108, .length = 1},
-  [68] = {.index = 109, .length = 3},
-  [69] = {.index = 112, .length = 2},
-  [70] = {.index = 114, .length = 3},
-  [71] = {.index = 117, .length = 2},
-  [72] = {.index = 119, .length = 3},
-  [73] = {.index = 122, .length = 3},
+  [1] = {.index = 0, .length = 3},
+  [2] = {.index = 3, .length = 1},
+  [3] = {.index = 4, .length = 1},
+  [4] = {.index = 5, .length = 2},
+  [5] = {.index = 7, .length = 1},
+  [6] = {.index = 8, .length = 3},
+  [7] = {.index = 11, .length = 1},
+  [8] = {.index = 0, .length = 3},
+  [9] = {.index = 12, .length = 4},
+  [10] = {.index = 16, .length = 1},
+  [11] = {.index = 17, .length = 1},
+  [13] = {.index = 18, .length = 1},
+  [14] = {.index = 19, .length = 3},
+  [15] = {.index = 22, .length = 4},
+  [16] = {.index = 26, .length = 1},
+  [17] = {.index = 27, .length = 1},
+  [18] = {.index = 28, .length = 3},
+  [19] = {.index = 31, .length = 2},
+  [20] = {.index = 33, .length = 1},
+  [21] = {.index = 34, .length = 2},
+  [22] = {.index = 36, .length = 1},
+  [23] = {.index = 37, .length = 2},
+  [24] = {.index = 39, .length = 1},
+  [25] = {.index = 40, .length = 2},
+  [26] = {.index = 42, .length = 3},
+  [27] = {.index = 45, .length = 2},
+  [28] = {.index = 47, .length = 2},
+  [29] = {.index = 37, .length = 2},
+  [30] = {.index = 49, .length = 1},
+  [31] = {.index = 50, .length = 3},
+  [32] = {.index = 53, .length = 4},
+  [33] = {.index = 57, .length = 2},
+  [34] = {.index = 57, .length = 2},
+  [35] = {.index = 59, .length = 1},
+  [36] = {.index = 60, .length = 1},
+  [37] = {.index = 61, .length = 1},
+  [38] = {.index = 62, .length = 3},
+  [39] = {.index = 65, .length = 2},
+  [40] = {.index = 67, .length = 4},
+  [41] = {.index = 71, .length = 3},
+  [42] = {.index = 74, .length = 1},
+  [43] = {.index = 75, .length = 2},
+  [44] = {.index = 77, .length = 2},
+  [45] = {.index = 79, .length = 1},
+  [46] = {.index = 80, .length = 2},
+  [47] = {.index = 82, .length = 1},
+  [48] = {.index = 83, .length = 2},
+  [49] = {.index = 85, .length = 1},
+  [50] = {.index = 86, .length = 1},
+  [51] = {.index = 87, .length = 3},
+  [52] = {.index = 90, .length = 4},
+  [53] = {.index = 94, .length = 3},
+  [54] = {.index = 97, .length = 2},
+  [55] = {.index = 99, .length = 4},
+  [56] = {.index = 103, .length = 3},
+  [57] = {.index = 106, .length = 1},
+  [58] = {.index = 107, .length = 4},
+  [59] = {.index = 111, .length = 1},
+  [60] = {.index = 112, .length = 1},
+  [61] = {.index = 113, .length = 3},
+  [62] = {.index = 116, .length = 2},
+  [63] = {.index = 118, .length = 4},
+  [64] = {.index = 122, .length = 3},
+  [65] = {.index = 125, .length = 1},
+  [66] = {.index = 126, .length = 2},
+  [67] = {.index = 128, .length = 3},
+  [68] = {.index = 131, .length = 3},
+  [69] = {.index = 134, .length = 2},
+  [70] = {.index = 136, .length = 4},
+  [71] = {.index = 140, .length = 3},
+  [72] = {.index = 143, .length = 4},
+  [73] = {.index = 147, .length = 3},
+  [74] = {.index = 150, .length = 3},
+  [75] = {.index = 153, .length = 3},
 };
 
 static const TSFieldMapEntry ts_field_map_entries[] = {
   [0] =
     {field_name, 0, .inherited = true},
+    {field_parameters, 0, .inherited = true},
     {field_type, 0, .inherited = true},
-  [2] =
-    {field_name, 0},
   [3] =
-    {field_name, 1},
+    {field_name, 0},
   [4] =
+    {field_name, 1},
+  [5] =
     {field_argument, 1},
     {field_operator, 0},
-  [6] =
-    {field_type, 0, .inherited = true},
   [7] =
+    {field_type, 0, .inherited = true},
+  [8] =
     {field_left, 0, .inherited = true},
     {field_operator, 0, .inherited = true},
     {field_right, 0, .inherited = true},
-  [10] =
-    {field_member, 1},
   [11] =
+    {field_member, 1},
+  [12] =
     {field_body, 1},
     {field_name, 0, .inherited = true},
+    {field_parameters, 0, .inherited = true},
     {field_type, 0, .inherited = true},
-  [14] =
-    {field_condition, 0, .inherited = true},
-  [15] =
-    {field_left, 0},
   [16] =
-    {field_type, 1, .inherited = true},
+    {field_condition, 0, .inherited = true},
   [17] =
-    {field_name, 1, .inherited = true},
+    {field_left, 0},
+  [18] =
     {field_type, 1, .inherited = true},
   [19] =
-    {field_body, 2},
     {field_name, 1, .inherited = true},
+    {field_parameters, 1, .inherited = true},
     {field_type, 1, .inherited = true},
   [22] =
-    {field_condition, 1, .inherited = true},
-  [23] =
-    {field_type, 0},
-  [24] =
-    {field_ok, 2, .inherited = true},
-    {field_type, 2},
+    {field_body, 2},
+    {field_name, 1, .inherited = true},
+    {field_parameters, 1, .inherited = true},
+    {field_type, 1, .inherited = true},
   [26] =
-    {field_type, 2},
+    {field_condition, 1, .inherited = true},
   [27] =
-    {field_body, 0},
+    {field_type, 0},
   [28] =
-    {field_body, 1, .inherited = true},
-    {field_condition, 0, .inherited = true},
-  [30] =
-    {field_body, 1, .inherited = true},
+    {field_ok, 2, .inherited = true},
+    {field_parameters, 1},
+    {field_type, 2},
   [31] =
-    {field_name, 0},
+    {field_parameters, 1},
     {field_type, 2},
   [33] =
-    {field_function, 0},
+    {field_body, 0},
   [34] =
+    {field_body, 1, .inherited = true},
+    {field_condition, 0, .inherited = true},
+  [36] =
+    {field_body, 1, .inherited = true},
+  [37] =
+    {field_name, 0},
+    {field_type, 2},
+  [39] =
+    {field_function, 0},
+  [40] =
     {field_left, 0},
     {field_right, 2},
-  [36] =
+  [42] =
     {field_left, 0},
     {field_operator, 1},
     {field_right, 2},
-  [39] =
+  [45] =
     {field_member, 2},
     {field_object, 0},
-  [41] =
+  [47] =
     {field_error, 0},
     {field_ok, 2},
-  [43] =
+  [49] =
     {field_type, 2, .inherited = true},
-  [44] =
+  [50] =
     {field_name, 2, .inherited = true},
+    {field_parameters, 2, .inherited = true},
     {field_type, 2, .inherited = true},
-  [46] =
+  [53] =
     {field_body, 3},
     {field_name, 2, .inherited = true},
+    {field_parameters, 2, .inherited = true},
     {field_type, 2, .inherited = true},
-  [49] =
+  [57] =
     {field_name, 1},
-    {field_type, 3},
-  [51] =
-    {field_type, 3},
-  [52] =
-    {field_type, 1},
-  [53] =
-    {field_ok, 1},
-  [54] =
-    {field_ok, 3, .inherited = true},
-    {field_type, 3},
-  [56] =
-    {field_name, 1},
-    {field_ok, 3, .inherited = true},
     {field_type, 3},
   [59] =
-    {field_body, 2, .inherited = true},
+    {field_type, 3},
   [60] =
+    {field_type, 1},
+  [61] =
+    {field_ok, 1},
+  [62] =
+    {field_ok, 3, .inherited = true},
+    {field_parameters, 1},
+    {field_type, 3},
+  [65] =
+    {field_parameters, 1},
+    {field_type, 3},
+  [67] =
+    {field_name, 1},
+    {field_ok, 3, .inherited = true},
+    {field_parameters, 2},
+    {field_type, 3},
+  [71] =
+    {field_name, 1},
+    {field_parameters, 2},
+    {field_type, 3},
+  [74] =
+    {field_body, 2, .inherited = true},
+  [75] =
     {field_body, 2, .inherited = true},
     {field_condition, 1, .inherited = true},
-  [62] =
+  [77] =
     {field_type, 0, .inherited = true},
     {field_type, 1, .inherited = true},
-  [64] =
+  [79] =
     {field_left, 1},
-  [65] =
+  [80] =
     {field_left, 0, .inherited = true},
     {field_left, 1, .inherited = true},
-  [67] =
+  [82] =
     {field_condition, 2},
-  [68] =
+  [83] =
     {field_index, 2},
     {field_object, 0},
-  [70] =
+  [85] =
     {field_condition, 2, .inherited = true},
-  [71] =
+  [86] =
     {field_type, 3, .inherited = true},
-  [72] =
+  [87] =
     {field_name, 3, .inherited = true},
+    {field_parameters, 3, .inherited = true},
     {field_type, 3, .inherited = true},
-  [74] =
+  [90] =
     {field_body, 4},
     {field_name, 3, .inherited = true},
+    {field_parameters, 3, .inherited = true},
     {field_type, 3, .inherited = true},
-  [77] =
+  [94] =
     {field_ok, 4, .inherited = true},
+    {field_parameters, 1},
     {field_type, 4},
-  [79] =
+  [97] =
+    {field_parameters, 1},
     {field_type, 4},
-  [80] =
+  [99] =
     {field_name, 1},
     {field_ok, 4, .inherited = true},
+    {field_parameters, 2},
     {field_type, 4},
-  [83] =
+  [103] =
     {field_name, 1},
+    {field_parameters, 2},
     {field_type, 4},
-  [85] =
+  [106] =
     {field_alternative, 1},
-  [86] =
+  [107] =
     {field_left, 0},
     {field_left, 1, .inherited = true},
     {field_operator, 2},
     {field_right, 3},
-  [90] =
+  [111] =
     {field_sentinel, 2},
-  [91] =
+  [112] =
     {field_type, 4, .inherited = true},
-  [92] =
+  [113] =
     {field_ok, 5, .inherited = true},
+    {field_parameters, 1},
     {field_type, 5},
-  [94] =
+  [116] =
+    {field_parameters, 1},
     {field_type, 5},
-  [95] =
+  [118] =
     {field_name, 1},
     {field_ok, 5, .inherited = true},
+    {field_parameters, 2},
     {field_type, 5},
-  [98] =
+  [122] =
     {field_name, 1},
+    {field_parameters, 2},
     {field_type, 5},
-  [100] =
+  [125] =
     {field_alternative, 2},
-  [101] =
+  [126] =
     {field_name, 1},
     {field_value, 3},
-  [103] =
+  [128] =
     {field_index, 2},
     {field_object, 0},
     {field_sentinel, 4},
-  [106] =
+  [131] =
     {field_ok, 6, .inherited = true},
+    {field_parameters, 1},
     {field_type, 6},
-  [108] =
+  [134] =
+    {field_parameters, 1},
     {field_type, 6},
-  [109] =
+  [136] =
     {field_name, 1},
     {field_ok, 6, .inherited = true},
+    {field_parameters, 2},
     {field_type, 6},
-  [112] =
+  [140] =
     {field_name, 1},
+    {field_parameters, 2},
     {field_type, 6},
-  [114] =
+  [143] =
     {field_name, 1},
     {field_ok, 7, .inherited = true},
+    {field_parameters, 2},
     {field_type, 7},
-  [117] =
+  [147] =
     {field_name, 1},
+    {field_parameters, 2},
     {field_type, 7},
-  [119] =
+  [150] =
     {field_left, 2, .inherited = true},
     {field_operator, 2, .inherited = true},
     {field_right, 2, .inherited = true},
-  [122] =
+  [153] =
     {field_left, 3, .inherited = true},
     {field_operator, 3, .inherited = true},
     {field_right, 3, .inherited = true},
@@ -2334,8 +2371,10 @@ static const uint32_t ts_alias_sequence_offsets[PRODUCTION_ID_COUNT] = {
   [69] = 0,
   [70] = 0,
   [71] = 0,
-  [72] = 34,
-  [73] = 45,
+  [72] = 0,
+  [73] = 0,
+  [74] = 34,
+  [75] = 45,
 };
 
 static const TSSymbol ts_alias_sequences[56] = {
@@ -28028,10 +28067,10 @@ static const uint32_t ts_parse_actions[] = {
   [1758] = REDUCE_RECORD(sym_return_expression, 1, 0, 0),
   [1760] = REDUCE_RECORD(sym_field_expression, 3, 0, 27),
   [1762] = REDUCE_RECORD(sym__variable_declaration_expression_statement, 4, 0, 0),
-  [1764] = REDUCE_RECORD(sym__if_prefix, 4, 0, 45),
+  [1764] = REDUCE_RECORD(sym__if_prefix, 4, 0, 47),
   [1766] = REDUCE_RECORD(sym_unary_expression, 2, 0, 4),
   [1768] = REDUCE_RECORD(sym_primary_type_expression, 1, 0, 1),
-  [1770] = REDUCE_RECORD(sym__function_prototype, 4, 0, 33),
+  [1770] = REDUCE_RECORD(sym__function_prototype, 4, 0, 41),
   [1772] = REDUCE_RECORD(sym_payload, 3, 0, 0),
   [1774] = REDUCE_RECORD(sym_anonymous_struct_initializer, 2, 0, 0),
   [1776] = REDUCE_RECORD(sym_arguments, 3, 0, 0),
@@ -28046,7 +28085,7 @@ static const uint32_t ts_parse_actions[] = {
   [1794] = REDUCE_RECORD(sym__conditional_body, 2, 0, 20),
   [1796] = REDUCE_RECORD(sym_if_statement, 2, 0, 21),
   [1798] = REDUCE_RECORD(sym__inferred_error_union_type, 2, 0, 37),
-  [1800] = REDUCE_RECORD(sym__function_prototype, 4, 0, 39),
+  [1800] = REDUCE_RECORD(sym__function_prototype, 4, 0, 40),
   [1802] = REDUCE_RECORD(sym__container_members, 2, 0, 0),
   [1804] = REDUCE_RECORD(sym_parameters, 2, 0, 0),
   [1806] = REDUCE_RECORD(sym__switch_case_exp, 1, 0, 0),
@@ -28064,12 +28103,12 @@ static const uint32_t ts_parse_actions[] = {
   [1830] = REDUCE_RECORD(sym_call_expression, 5, 0, 24),
   [1832] = REDUCE_RECORD(sym_parameters, 3, 0, 0),
   [1834] = REDUCE_RECORD(sym_array_type, 4, 0, 0),
-  [1836] = REDUCE_RECORD(sym_index_expression, 4, 0, 46),
-  [1838] = REDUCE_RECORD(sym__while_prefix, 4, 0, 45),
+  [1836] = REDUCE_RECORD(sym_index_expression, 4, 0, 48),
+  [1838] = REDUCE_RECORD(sym__while_prefix, 4, 0, 47),
   [1840] = REDUCE_RECORD(sym__for_prefix, 5, 0, 0),
   [1842] = REDUCE_RECORD(sym_field_expression, 2, 0, 7),
   [1844] = REDUCE_RECORD(sym_nullable_type, 2, 0, 0),
-  [1846] = REDUCE_RECORD(sym_field_initializer, 4, 0, 64),
+  [1846] = REDUCE_RECORD(sym_field_initializer, 4, 0, 66),
   [1848] = REDUCE_RECORD(sym_initializer_list, 3, 0, 0),
   [1850] = REDUCE_RECORD(sym_range_expression, 2, 0, 11),
   [1852] = REDUCE_RECORD(sym_while_statement, 2, 0, 21),
@@ -28091,15 +28130,15 @@ static const uint32_t ts_parse_actions[] = {
   [1884] = REDUCE_RECORD(sym_break_label, 2, 0, 0),
   [1886] = REDUCE_RECORD(sym_break_expression, 2, 0, 0),
   [1888] = REDUCE_RECORD(sym__block_expr_statement, 1, 0, 0),
-  [1890] = REDUCE_RECORD(sym_else_clause, 2, 0, 55),
+  [1890] = REDUCE_RECORD(sym_else_clause, 2, 0, 57),
   [1892] = REDUCE_RECORD(sym_character, 3, 0, 0),
   [1894] = REDUCE_RECORD(sym_call_expression, 3, 0, 24),
   [1896] = REDUCE_RECORD(sym_struct_initializer, 2, 0, 0),
   [1898] = REDUCE_RECORD(sym_pointer_type, 5, 0, 0),
   [1900] = REDUCE_RECORD(sym_pointer_type, 2, 0, 0),
   [1902] = REDUCE_RECORD(sym_switch_case, 4, 0, 0),
-  [1904] = REDUCE_RECORD(sym_assignment_expression, 4, 0, 56),
-  [1906] = REDUCE_RECORD(aux_sym_assignment_expression_repeat1, 2, 0, 43),
+  [1904] = REDUCE_RECORD(sym_assignment_expression, 4, 0, 58),
+  [1906] = REDUCE_RECORD(aux_sym_assignment_expression_repeat1, 2, 0, 45),
   [1908] = REDUCE_RECORD(sym_parenthesized_expression, 3, 0, 0),
   [1910] = REDUCE_RECORD(sym_block_label, 2, 0, 0),
   [1912] = REDUCE_RECORD(sym_continue_expression, 1, 0, 0),
@@ -28111,9 +28150,9 @@ static const uint32_t ts_parse_actions[] = {
   [1924] = REDUCE_RECORD(sym__for_prefix, 6, 0, 0),
   [1926] = REDUCE_RECORD(sym_labeled_statement, 2, 0, 0),
   [1928] = REDUCE_RECORD(sym_defer_statement, 2, 0, 0),
-  [1930] = REDUCE_RECORD(sym__while_prefix, 8, 0, 45),
+  [1930] = REDUCE_RECORD(sym__while_prefix, 8, 0, 47),
   [1932] = REDUCE_RECORD(sym_calling_convention, 4, 0, 0),
-  [1934] = REDUCE_RECORD(sym__if_prefix, 5, 0, 45),
+  [1934] = REDUCE_RECORD(sym__if_prefix, 5, 0, 47),
   [1936] = REDUCE_RECORD(sym_multiline_string, 1, 0, 0),
   [1938] = REDUCE_RECORD(aux_sym_multiline_string_repeat1, 2, 0, 0),
   [1940] = REDUCE_RECORD(sym_struct_declaration, 3, 0, 0),
@@ -28135,7 +28174,7 @@ static const uint32_t ts_parse_actions[] = {
   [1972] = REDUCE_RECORD(sym_asm_input, 3, 0, 0),
   [1974] = REDUCE_RECORD(sym_variable_declaration, 5, 0, 13),
   [1976] = REDUCE_RECORD(sym_enum_declaration, 3, 0, 0),
-  [1978] = REDUCE_RECORD(sym_switch_case, 3, 0, 72),
+  [1978] = REDUCE_RECORD(sym_switch_case, 3, 0, 74),
   [1980] = REDUCE_RECORD(sym_union_declaration, 3, 0, 0),
   [1982] = REDUCE_RECORD(sym_continue_expression, 2, 0, 0),
   [1984] = REDUCE_RECORD(sym_opaque_declaration, 3, 0, 0),
@@ -28146,17 +28185,17 @@ static const uint32_t ts_parse_actions[] = {
   [1994] = REDUCE_RECORD(sym_test_declaration, 2, 0, 0),
   [1996] = REDUCE_RECORD(sym_variable_declaration, 3, 0, 13),
   [1998] = REDUCE_RECORD(sym_function_declaration, 4, 0, 31),
-  [2000] = REDUCE_RECORD(sym_for_statement, 3, 0, 40),
-  [2002] = REDUCE_RECORD(sym__variable_declaration_expression_statement, 5, 0, 42),
-  [2004] = REDUCE_RECORD(sym_else_clause, 3, 0, 63),
+  [2000] = REDUCE_RECORD(sym_for_statement, 3, 0, 42),
+  [2002] = REDUCE_RECORD(sym__variable_declaration_expression_statement, 5, 0, 44),
+  [2004] = REDUCE_RECORD(sym_else_clause, 3, 0, 65),
   [2006] = REDUCE_RECORD(sym_errdefer_statement, 2, 0, 0),
   [2008] = REDUCE_RECORD(sym_errdefer_statement, 3, 0, 0),
   [2010] = REDUCE_RECORD(sym_comptime_statement, 2, 0, 0),
   [2012] = REDUCE_RECORD(sym_suspend_statement, 2, 0, 0),
   [2014] = REDUCE_RECORD(sym_nosuspend_statement, 2, 0, 0),
-  [2016] = REDUCE_RECORD(sym__while_prefix, 5, 0, 45),
-  [2018] = REDUCE_RECORD(sym__while_prefix, 9, 0, 45),
-  [2020] = REDUCE_RECORD(sym_index_expression, 6, 0, 65),
+  [2016] = REDUCE_RECORD(sym__while_prefix, 5, 0, 47),
+  [2018] = REDUCE_RECORD(sym__while_prefix, 9, 0, 47),
+  [2020] = REDUCE_RECORD(sym_index_expression, 6, 0, 67),
   [2022] = REDUCE_RECORD(sym_enum_declaration, 7, 0, 0),
   [2024] = REDUCE_RECORD(sym_union_declaration, 7, 0, 0),
   [2026] = REDUCE_RECORD(sym_struct_declaration, 8, 0, 0),
@@ -28167,7 +28206,7 @@ static const uint32_t ts_parse_actions[] = {
   [2036] = REDUCE_RECORD(sym_error_set_declaration, 5, 0, 0),
   [2038] = REDUCE_RECORD(sym_pointer_type, 6, 0, 0),
   [2040] = REDUCE_RECORD(sym_array_type, 6, 0, 0),
-  [2042] = REDUCE_RECORD(sym__function_prototype, 4, 0, 35),
+  [2042] = REDUCE_RECORD(sym__function_prototype, 4, 0, 39),
   [2044] = REDUCE_RECORD(sym_pointer_type, 4, 0, 0),
   [2046] = REDUCE_RECORD(sym__function_prototype, 3, 0, 19),
   [2048] = REDUCE_RECORD(sym_pointer_type, 7, 0, 0),
@@ -28176,7 +28215,7 @@ static const uint32_t ts_parse_actions[] = {
   [2054] = REDUCE_RECORD(sym_catch_expression, 3, 0, 0),
   [2056] = REDUCE_RECORD(sym_catch_expression, 4, 0, 0),
   [2058] = REDUCE_RECORD(sym_container_field, 3, 1, 2),
-  [2060] = REDUCE_RECORD(sym__function_prototype, 5, 0, 54),
+  [2060] = REDUCE_RECORD(sym__function_prototype, 5, 0, 56),
   [2062] = REDUCE_RECORD(sym_parameter, 1, 0, 17),
   [2064] = REDUCE_RECORD(sym_asm_output_item, 8, 0, 0),
   [2066] = REDUCE_RECORD(sym_asm_output, 3, 0, 0),
@@ -28186,7 +28225,7 @@ static const uint32_t ts_parse_actions[] = {
   [2074] = REDUCE_RECORD(aux_sym__variable_declaration_expression_statement_repeat1, 2, 0, 13),
   [2076] = REDUCE_RECORD(aux_sym_initializer_list_repeat1, 2, 0, 0),
   [2078] = REDUCE_RECORD(aux_sym_error_set_declaration_repeat1, 2, 0, 0),
-  [2080] = REDUCE_RECORD(sym_switch_case, 4, 0, 73),
+  [2080] = REDUCE_RECORD(sym_switch_case, 4, 0, 75),
   [2082] = REDUCE_RECORD(sym_asm_output, 4, 0, 0),
   [2084] = REDUCE_RECORD(sym_asm_input, 5, 0, 0),
   [2086] = REDUCE_RECORD(sym_switch_expression, 6, 0, 0),
@@ -28203,23 +28242,23 @@ static const uint32_t ts_parse_actions[] = {
   [2108] = REDUCE_RECORD(sym_variable_declaration, 4, 0, 30),
   [2110] = REDUCE_RECORD(sym_function_declaration, 4, 0, 32),
   [2112] = REDUCE_RECORD(sym_variable_declaration, 6, 0, 30),
-  [2114] = REDUCE_RECORD(sym_variable_declaration, 6, 0, 58),
-  [2116] = REDUCE_RECORD(sym_variable_declaration, 7, 0, 48),
+  [2114] = REDUCE_RECORD(sym_variable_declaration, 6, 0, 60),
+  [2116] = REDUCE_RECORD(sym_variable_declaration, 7, 0, 50),
   [2118] = REDUCE_RECORD(sym_function_declaration, 2, 0, 8),
   [2120] = REDUCE_RECORD(sym_using_namespace_declaration, 3, 0, 0),
   [2122] = REDUCE_RECORD(sym_variable_declaration, 2, 0, 5),
   [2124] = REDUCE_RECORD(sym_comptime_declaration, 3, 0, 0),
   [2126] = REDUCE_RECORD(sym_test_declaration, 4, 0, 0),
-  [2128] = REDUCE_RECORD(sym_variable_declaration, 8, 0, 58),
-  [2130] = REDUCE_RECORD(sym_variable_declaration, 5, 0, 48),
-  [2132] = REDUCE_RECORD(sym_function_declaration, 5, 0, 49),
-  [2134] = REDUCE_RECORD(sym_function_declaration, 5, 0, 50),
+  [2128] = REDUCE_RECORD(sym_variable_declaration, 8, 0, 60),
+  [2130] = REDUCE_RECORD(sym_variable_declaration, 5, 0, 50),
+  [2132] = REDUCE_RECORD(sym_function_declaration, 5, 0, 51),
+  [2134] = REDUCE_RECORD(sym_function_declaration, 5, 0, 52),
   [2136] = REDUCE_RECORD(aux_sym_slice_type_repeat1, 2, 0, 0),
   [2138] = REDUCE_RECORD(aux_sym_pointer_type_repeat1, 2, 0, 0),
   [2140] = REDUCE_RECORD(sym_payload, 6, 0, 0),
   [2142] = REDUCE_RECORD(sym__variable_declaration_expression_statement, 5, 0, 13),
   [2144] = REDUCE_RECORD(sym_payload, 5, 0, 0),
-  [2146] = REDUCE_RECORD(sym_while_statement, 3, 0, 41),
+  [2146] = REDUCE_RECORD(sym_while_statement, 3, 0, 43),
   [2148] = REDUCE_RECORD(sym_comptime_statement, 2, 0, 13),
   [2150] = REDUCE_RECORD(aux_sym_pointer_type_repeat1, 4, 0, 0),
   [2152] = REDUCE_RECORD(aux_sym_pointer_type_repeat1, 8, 0, 0),
@@ -28234,20 +28273,20 @@ static const uint32_t ts_parse_actions[] = {
   [2170] = REDUCE_RECORD(sym_enum_declaration, 6, 0, 0),
   [2172] = REDUCE_RECORD(sym_union_declaration, 6, 0, 0),
   [2174] = REDUCE_RECORD(sym_error_set_declaration, 6, 0, 0),
-  [2176] = REDUCE_RECORD(sym_slice_type, 6, 0, 57),
+  [2176] = REDUCE_RECORD(sym_slice_type, 6, 0, 59),
   [2178] = REDUCE_RECORD(sym_initializer_list, 5, 0, 0),
   [2180] = REDUCE_RECORD(sym_arguments, 5, 0, 0),
   [2182] = REDUCE_RECORD(sym_call_expression, 6, 0, 24),
   [2184] = REDUCE_RECORD(sym_error_set_declaration, 3, 0, 0),
   [2186] = REDUCE_RECORD(sym_struct_declaration, 7, 0, 0),
-  [2188] = REDUCE_RECORD(sym__function_prototype, 7, 0, 66),
-  [2190] = REDUCE_RECORD(sym__function_prototype, 7, 0, 67),
-  [2192] = REDUCE_RECORD(sym__function_prototype, 7, 0, 68),
-  [2194] = REDUCE_RECORD(sym__function_prototype, 7, 0, 69),
+  [2188] = REDUCE_RECORD(sym__function_prototype, 7, 0, 68),
+  [2190] = REDUCE_RECORD(sym__function_prototype, 7, 0, 69),
+  [2192] = REDUCE_RECORD(sym__function_prototype, 7, 0, 70),
+  [2194] = REDUCE_RECORD(sym__function_prototype, 7, 0, 71),
   [2196] = REDUCE_RECORD(sym_enum_declaration, 8, 0, 0),
   [2198] = REDUCE_RECORD(sym_union_declaration, 8, 0, 0),
-  [2200] = REDUCE_RECORD(sym__function_prototype, 8, 0, 70),
-  [2202] = REDUCE_RECORD(sym__function_prototype, 8, 0, 71),
+  [2200] = REDUCE_RECORD(sym__function_prototype, 8, 0, 72),
+  [2202] = REDUCE_RECORD(sym__function_prototype, 8, 0, 73),
   [2204] = REDUCE_RECORD(sym_union_declaration, 9, 0, 0),
   [2206] = REDUCE_RECORD(sym_arguments, 2, 0, 0),
   [2208] = REDUCE_RECORD(sym_union_declaration, 11, 0, 0),
@@ -28255,19 +28294,19 @@ static const uint32_t ts_parse_actions[] = {
   [2212] = REDUCE_RECORD(sym_enum_declaration, 4, 0, 0),
   [2214] = REDUCE_RECORD(sym_union_declaration, 4, 0, 0),
   [2216] = REDUCE_RECORD(sym__function_prototype, 4, 0, 38),
-  [2218] = REDUCE_RECORD(sym__function_prototype, 6, 0, 61),
+  [2218] = REDUCE_RECORD(sym__function_prototype, 6, 0, 63),
   [2220] = REDUCE_RECORD(sym_asm_expression, 4, 0, 0),
   [2222] = REDUCE_RECORD(sym_struct_declaration, 5, 0, 0),
   [2224] = REDUCE_RECORD(sym_opaque_declaration, 5, 0, 0),
   [2226] = REDUCE_RECORD(sym_enum_declaration, 5, 0, 0),
-  [2228] = REDUCE_RECORD(sym__function_prototype, 5, 0, 51),
-  [2230] = REDUCE_RECORD(sym__function_prototype, 5, 0, 52),
-  [2232] = REDUCE_RECORD(sym__function_prototype, 5, 0, 53),
+  [2228] = REDUCE_RECORD(sym__function_prototype, 5, 0, 53),
+  [2230] = REDUCE_RECORD(sym__function_prototype, 5, 0, 54),
+  [2232] = REDUCE_RECORD(sym__function_prototype, 5, 0, 55),
   [2234] = REDUCE_RECORD(sym_asm_expression, 5, 0, 0),
-  [2236] = REDUCE_RECORD(sym_slice_type, 5, 0, 57),
-  [2238] = REDUCE_RECORD(sym__function_prototype, 6, 0, 59),
-  [2240] = REDUCE_RECORD(sym__function_prototype, 6, 0, 60),
-  [2242] = REDUCE_RECORD(sym__function_prototype, 6, 0, 62),
+  [2236] = REDUCE_RECORD(sym_slice_type, 5, 0, 59),
+  [2238] = REDUCE_RECORD(sym__function_prototype, 6, 0, 61),
+  [2240] = REDUCE_RECORD(sym__function_prototype, 6, 0, 62),
+  [2242] = REDUCE_RECORD(sym__function_prototype, 6, 0, 64),
   [2244] = REDUCE_RECORD(sym_if_type_expression, 5, 0, 10),
   [2246] = REDUCE_RECORD(sym_anyframe_type, 3, 0, 0),
   [2248] = REDUCE_RECORD(sym_for_expression, 3, 0, 0),
@@ -28276,15 +28315,15 @@ static const uint32_t ts_parse_actions[] = {
   [2254] = REDUCE_RECORD(sym_comptime_type_expression, 2, 0, 0),
   [2256] = REDUCE_RECORD(sym_for_expression, 4, 0, 0),
   [2258] = REDUCE_RECORD(sym_while_expression, 4, 0, 10),
-  [2260] = REDUCE_RECORD(sym_while_expression, 4, 0, 47),
+  [2260] = REDUCE_RECORD(sym_while_expression, 4, 0, 49),
   [2262] = REDUCE_RECORD(sym_for_expression, 5, 0, 0),
   [2264] = REDUCE_RECORD(sym_while_expression, 5, 0, 16),
   [2266] = REDUCE_RECORD(sym_if_expression, 5, 0, 10),
   [2268] = REDUCE_RECORD(sym_while_expression, 5, 0, 10),
   [2270] = REDUCE_RECORD(sym_while_expression, 6, 0, 16),
   [2272] = REDUCE_RECORD(sym_for_expression, 6, 0, 0),
-  [2274] = REDUCE_RECORD(sym_while_expression, 6, 0, 47),
-  [2276] = REDUCE_RECORD(sym_while_expression, 7, 0, 47),
+  [2274] = REDUCE_RECORD(sym_while_expression, 6, 0, 49),
+  [2276] = REDUCE_RECORD(sym_while_expression, 7, 0, 49),
   [2278] = REDUCE_RECORD(sym_nosuspend_expression, 2, 0, 0),
   [2280] = REDUCE_RECORD(sym_for_expression, 2, 0, 0),
   [2282] = REDUCE_RECORD(sym_while_expression, 2, 0, 10),
@@ -28321,9 +28360,9 @@ static const uint32_t ts_parse_actions[] = {
   [2344] = REDUCE_RECORD(sym_container_field, 5, 1, 34),
   [2346] = REDUCE_RECORD(sym__variable_declaration_header, 7, 0, 35),
   [2348] = REDUCE_RECORD(sym_asm_output_item, 7, 0, 0),
-  [2350] = REDUCE_RECORD(aux_sym__variable_declaration_expression_statement_repeat1, 2, 0, 42),
+  [2350] = REDUCE_RECORD(aux_sym__variable_declaration_expression_statement_repeat1, 2, 0, 44),
   [2352] = REDUCE_RECORD(sym__variable_declaration_header, 5, 0, 0),
-  [2354] = REDUCE_RECORD(aux_sym_assignment_expression_repeat1, 2, 0, 44),
+  [2354] = REDUCE_RECORD(aux_sym_assignment_expression_repeat1, 2, 0, 46),
   [2356] = REDUCE_RECORD(aux_sym_payload_repeat1, 3, 0, 0),
   [2358] = REDUCE_RECORD(sym_parameter, 1, 0, 0),
   [2360] = REDUCE_RECORD(sym_asm_output, 5, 0, 0),
