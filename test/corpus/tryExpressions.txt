@@ -1,0 +1,29 @@
+================================================================================
+Try prefix precedence
+================================================================================
+
+fn f() !i32 {
+    return try number() + -try other() * 2;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameters)
+    type: (error_union_type
+      ok: (builtin_type))
+    body: (block
+      (expression_statement
+        (return_expression
+          (binary_expression
+            left: (try_expression
+              (call_expression
+                function: (identifier)))
+            right: (binary_expression
+              left: (unary_expression
+                argument: (try_expression
+                  (call_expression
+                    function: (identifier))))
+              right: (integer))))))))
