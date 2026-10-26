@@ -9,8 +9,10 @@ const language = await Language.load(fileURLToPath(new URL('../../tree-sitter-zi
 const parser = new Parser();
 parser.setLanguage(language);
 const injections = new Query(language, readFileSync(new URL('../../queries/injections.scm', import.meta.url), 'utf8'));
+const indents = new Query(language, readFileSync(new URL('../../queries/indents.scm', import.meta.url), 'utf8'));
 
 afterAll(() => {
+  indents.delete();
   injections.delete();
   parser.delete();
 });
@@ -41,6 +43,11 @@ test('provides prefix-free Markdown ranges with line endings while leaving ordin
         .filter((match) => match.setProperties?.['injection.language'] === 'comment')
         .flatMap((match) => match.captures.map(({ node }) => node.text))
     ).toEqual(['// ordinary comment', '//// four slashes are ordinary']);
+    const ignored = indents
+      .captures(tree.rootNode)
+      .filter(({ name }) => name === 'indent.ignore')
+      .map(({ node }) => node.text);
+    expect(ignored).toEqual(expect.arrayContaining(contents.map((content) => content.parent!.text)));
   } finally {
     tree.delete();
   }

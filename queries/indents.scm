@@ -18,5 +18,7 @@
 
 [
   (comment)
+  (doc_comment)
+  (container_doc_comment)
   (multiline_string)
 ] @indent.ignore
