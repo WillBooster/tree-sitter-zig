@@ -33,7 +33,7 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   An empty comment at EOF has no content child. Ordinary comments, including `////`, remain `comment` nodes.
   Queries that need every comment kind must match all three node types.
 
-- Error sets are accepted directly as container field types, and pointer and slice element types may be conditional.
+- Error sets are accepted directly as container field types, and pointer, slice and array element types may be conditional.
 - `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
   initializer, as in Zig 0.16.
 - Zero-bit integers `u0` and `i0` are builtin types.
