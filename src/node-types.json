@@ -1827,7 +1827,17 @@
   {
     "type": "multiline_string",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "string_content",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "nosuspend_expression",
@@ -2826,6 +2836,10 @@
   },
   {
     "type": "[",
+    "named": false
+  },
+  {
+    "type": "\\\\",
     "named": false
   },
   {

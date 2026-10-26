@@ -76,6 +76,8 @@ Multiline strings
 
 const text =
     \\first line
+    \\
+    \\  // raw text
     \\second "line"
 ;
 
@@ -84,7 +86,10 @@ const text =
 (source_file
   (variable_declaration
     (identifier)
-    (multiline_string)))
+    (multiline_string
+      (string_content)
+      (string_content)
+      (string_content))))
 
 ================================================================================
 Operators
