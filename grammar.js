@@ -708,7 +708,7 @@ module.exports = grammar({
       $.expression,
       optional(seq(':', $.expression)),
       ']',
-      $.type_expression,
+      choice($.type_expression, $.if_type_expression),
     )),
 
     error_union_type: $ => prec.right(2, seq(

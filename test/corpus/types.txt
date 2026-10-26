@@ -318,3 +318,96 @@ const escaped: @"i0" = 0;
   (variable_declaration (identifier) type: (builtin_type) (integer))
   (variable_declaration (identifier) type: (identifier) (integer))
   (variable_declaration (identifier) type: (identifier (string (string_content))) (integer)))
+
+================================================================================
+Conditional array element types
+================================================================================
+
+const Plain = [2]if (true) u8 else u16;
+const Sentinel = [2:0]if (false) u8 else u16;
+const Nested = [2][3]if (true) u8 else u16;
+const Branch = [2]if (false) [3]u8 else [4]u16;
+const Grouped = [2](if (true) u8 else u16);
+const Record = struct { items: [2]if (true) u8 else u16 };
+fn consume(items: [2]if (false) u8 else u16) void {
+    _ = items;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (array_type
+      (integer)
+      (if_type_expression
+        condition: (boolean)
+        (builtin_type)
+        (builtin_type))))
+  (variable_declaration
+    (identifier)
+    (array_type
+      (integer)
+      (integer)
+      (if_type_expression
+        condition: (boolean)
+        (builtin_type)
+        (builtin_type))))
+  (variable_declaration
+    (identifier)
+    (array_type
+      (integer)
+      (array_type
+        (integer)
+        (if_type_expression
+          condition: (boolean)
+          (builtin_type)
+          (builtin_type)))))
+  (variable_declaration
+    (identifier)
+    (array_type
+      (integer)
+      (if_type_expression
+        condition: (boolean)
+        (array_type
+          (integer)
+          (builtin_type))
+        (array_type
+          (integer)
+          (builtin_type)))))
+  (variable_declaration
+    (identifier)
+    (array_type
+      (integer)
+      (parenthesized_expression
+        (if_expression
+          condition: (boolean)
+          (builtin_type)
+          (builtin_type)))))
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (container_field
+        name: (identifier)
+        type: (array_type
+          (integer)
+          (if_type_expression
+            condition: (boolean)
+            (builtin_type)
+            (builtin_type))))))
+  (function_declaration
+    name: (identifier)
+    parameters: (parameters
+      (parameter
+        name: (identifier)
+        type: (array_type
+          (integer)
+          (if_type_expression
+            condition: (boolean)
+            (builtin_type)
+            (builtin_type)))))
+    type: (builtin_type)
+    body: (block
+      (variable_declaration
+        (identifier)
+        (identifier)))))
