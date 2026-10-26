@@ -18,6 +18,7 @@
     "grammar.js",
     "queries/*.scm",
     "src/node-types.json",
+    "src/scanner.c",
     "tree-sitter.json",
     "*.wasm"
   ],

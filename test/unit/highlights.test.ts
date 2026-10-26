@@ -27,13 +27,12 @@ const ALL_CAPS = ordinary;
       captures.filter((capture) => capture.name === name).map(({ node }) => node.text);
     expect(texts('type')).toEqual(['CamelCase', 'ALL_CAPS']);
     expect(texts('constant')).toEqual(['ALL_CAPS']);
-    expect(texts('comment.documentation')).toEqual(['//! container documentation']);
-    expect(texts('variable')).toContain('ordinary');
-    expect(texts('comment')).toEqual([
-      '// ordinary comment',
-      '//! container documentation',
-      '/// declaration documentation',
+    expect(texts('comment.documentation')).toEqual([
+      '//! container documentation\n',
+      '/// declaration documentation\n',
     ]);
+    expect(texts('variable')).toContain('ordinary');
+    expect(texts('comment')).toEqual(['// ordinary comment']);
   } finally {
     tree.delete();
     parser.delete();

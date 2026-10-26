@@ -28,6 +28,10 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   an error.
 - Multiline strings expose each `\\` line delimiter and nonempty `string_content` children. The delimiters receive
   the `@string.special.symbol` highlight capture. Line endings are outside the content nodes.
+- `///` and `//!` produce `doc_comment` and `container_doc_comment` nodes. Their `doc_comment_content` children
+  exclude the prefix and include the line ending when present, so the injection query can combine them as Markdown.
+  An empty comment at EOF has no content child. Ordinary comments, including `////`, remain `comment` nodes.
+  Queries that need every comment kind must match all three node types.
 
 - Error sets are accepted directly as container field types, and pointer and slice element types may be conditional.
 - `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
@@ -87,6 +91,7 @@ parser.setLanguage(await Language.load(zig));
 ```
 
 The package also ships `grammar.js`, the queries in `queries/`, and the node types in `src/node-types.json`.
+It includes `src/scanner.c`, which must be compiled with a parser regenerated from this grammar.
 
 In Rust, depend on the [crate](https://crates.io/crates/willbooster-tree-sitter-zig) and on
 [willbooster-tree-sitter](https://crates.io/crates/willbooster-tree-sitter), the runtime this package is tested and

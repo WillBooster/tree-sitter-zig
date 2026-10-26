@@ -284,5 +284,7 @@
 
 (comment) @comment @spell
 
-((comment) @comment.documentation
-  (#match? @comment.documentation "^//!"))
+[
+  (doc_comment)
+  (container_doc_comment)
+] @comment.documentation @spell

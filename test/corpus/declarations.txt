@@ -242,8 +242,10 @@ const x = 1; // trailing
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (container_doc_comment
+    (doc_comment_content))
+  (doc_comment
+    (doc_comment_content))
   (using_namespace_declaration
     (builtin_function
       (builtin_identifier)
