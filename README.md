@@ -26,6 +26,8 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   `~x`) or only continue one (`+`, `orelse`), and so do ranges outside `for` loops.
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
+- Multiline strings expose each `\\` line delimiter and nonempty `string_content` children. The delimiters receive
+  the `@string.special.symbol` highlight capture. Line endings are outside the content nodes.
 
 - Error sets are accepted directly as container field types, and pointer and slice element types may be conditional.
 - `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
