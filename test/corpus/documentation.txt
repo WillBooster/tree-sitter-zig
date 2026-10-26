@@ -1,0 +1,31 @@
+================================================================================
+Documentation, empty lines, and ordinary four-slash comments
+================================================================================
+
+//! Container documentation.
+//!
+//// Ordinary comment.
+/// Record documentation.
+const Record = struct {
+    /// Field documentation.
+    field: u8,
+};
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (container_doc_comment
+    (doc_comment_content))
+  (container_doc_comment
+    (doc_comment_content))
+  (comment)
+  (doc_comment
+    (doc_comment_content))
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (doc_comment
+        (doc_comment_content))
+      (container_field
+        (identifier)
+        (builtin_type)))))
