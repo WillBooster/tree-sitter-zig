@@ -317,7 +317,7 @@ const escaped: @"i0" = 0;
   (variable_declaration (identifier) type: (builtin_type) (integer))
   (variable_declaration (identifier) type: (builtin_type) (integer))
   (variable_declaration (identifier) type: (identifier) (integer))
-  (variable_declaration (identifier) type: (identifier (string (string_content))) (integer)))
+  (variable_declaration (identifier) type: (identifier (string_content)) (integer)))
 
 ================================================================================
 Conditional array element types

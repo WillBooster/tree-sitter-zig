@@ -793,7 +793,9 @@ module.exports = grammar({
       $.arguments,
     ),
 
-    string: $ => seq(
+    string: $ => $._string,
+
+    _string: $ => seq(
       '"',
       repeat(choice(
         alias(token.immediate(prec(1, /[^\\"\n]+/)), $.string_content),
@@ -868,7 +870,7 @@ module.exports = grammar({
 
     builtin_identifier: _ => /@[A-Za-z_][A-Za-z0-9_]*/,
 
-    identifier: $ => choice($._identifier, seq('@', $.string)),
+    identifier: $ => choice($._identifier, seq('@', $._string)),
     _identifier: _ => /[A-Za-z_][A-Za-z0-9_]*/,
     _reserved_identifier: _ => choice(
       'undefined',

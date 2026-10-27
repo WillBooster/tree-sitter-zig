@@ -37,6 +37,8 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
 - `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
   initializer, as in Zig 0.16.
 - Zero-bit integers `u0` and `i0` are builtin types.
+- Quoted identifiers such as `@"hello world"` expose their content directly inside `identifier`, without a nested
+  `string` node, so string highlighting applies only to literals.
 - Boolean negation is a `unary_expression`. Inferred error unions (`!T`) occur only in function return types;
   their payload includes suffixes such as calls and field access (`!List(T)` or `!ns.Result`). Explicit error
   unions (`E!T`) retain their error and payload types.

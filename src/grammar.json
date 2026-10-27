@@ -5634,6 +5634,10 @@
       ]
     },
     "string": {
+      "type": "SYMBOL",
+      "name": "_string"
+    },
+    "_string": {
       "type": "SEQ",
       "members": [
         {
@@ -6492,7 +6496,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "string"
+              "name": "_string"
             }
           ]
         }
