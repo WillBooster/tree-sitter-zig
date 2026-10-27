@@ -254,7 +254,10 @@
 
 (boolean) @boolean
 
-(escape_sequence) @string.escape
+[
+  (string (escape_sequence) @string.escape)
+  (character (escape_sequence) @string.escape)
+]
 
 "\\\\" @string.special.symbol
 

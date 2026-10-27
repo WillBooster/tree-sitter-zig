@@ -39,6 +39,51 @@ const ALL_CAPS = ordinary;
   }
 });
 
+test('highlights quoted identifiers without treating their names as strings', () => {
+  const parser = new Parser();
+  parser.setLanguage(language);
+  const tree = parser.parse('const @"hello world" = "hello world";')!;
+  try {
+    expect(tree.rootNode.hasError).toBe(false);
+    const captures = highlights.captures(tree.rootNode);
+    const names = captures.filter(({ name }) => name === 'variable').map(({ node }) => node);
+    const strings = captures.filter(({ name }) => name === 'string').map(({ node }) => node);
+    expect(names.map((node) => node.text)).toEqual(['@"hello world"']);
+    expect(strings.map((node) => node.text)).toEqual(['"hello world"']);
+    expect(strings[0]!.startIndex).toBeGreaterThan(names[0]!.endIndex);
+  } finally {
+    tree.delete();
+    parser.delete();
+  }
+});
+
+test('keeps quoted identifier escapes out of string captures while preserving literal escapes', () => {
+  const parser = new Parser();
+  parser.setLanguage(language);
+  const source = String.raw`const @"a\nb" = "a\nb"; const character = '\n';`;
+  const tree = parser.parse(source)!;
+  try {
+    expect(tree.rootNode.hasError).toBe(false);
+    const captures = highlights.captures(tree.rootNode);
+    const identifier = tree.rootNode.descendantsOfType('identifier').find((node) => node.text.startsWith('@'))!;
+    expect(
+      captures.filter(
+        ({ name, node }) =>
+          name.startsWith('string') && node.startIndex >= identifier.startIndex && node.endIndex <= identifier.endIndex
+      )
+    ).toEqual([]);
+    expect(
+      captures.filter(({ name }) => name === 'string.escape').map(({ node }) => [node.text, node.parent?.type])
+    ).toEqual([
+      [String.raw`\n`, 'string'],
+      [String.raw`\n`, 'character'],
+    ]);
+  } finally {
+    tree.delete();
+    parser.delete();
+  }
+});
+
 test('highlights qualified parameter types without treating value members as types', () => {
   const root = fileURLToPath(new URL('../..', import.meta.url));
   mkdirSync(path.join(root, '.tmp'), { recursive: true });
