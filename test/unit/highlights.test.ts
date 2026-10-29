@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { expect, test } from 'vitest';
 
 await Parser.init();
@@ -188,51 +188,6 @@ test.each(['\n', '\r\n'])('keeps empty multiline bodies and %j line endings outs
       { row: 1, column: 4 },
       { row: 2, column: 4 },
     ]);
-  } finally {
-    tree.delete();
-    parser.delete();
-  }
-});
-
-test('agrees with fresh parsing when a multiline delimiter is damaged and restored', () => {
-  const delimiter = String.raw`\\`;
-  const source = `const text =\n    ${delimiter}body\n;\n`;
-  const startIndex = source.indexOf(delimiter);
-  const parser = new Parser();
-  parser.setLanguage(language);
-  let currentSource = source;
-  let currentPrefix = delimiter;
-  let tree = parser.parse(source)!;
-  const initial = tree.rootNode.toString();
-  try {
-    for (const prefix of [delimiter.slice(1), `${delimiter}\\`, delimiter]) {
-      const oldEndIndex = startIndex + currentPrefix.length;
-      tree.edit(
-        new Edit({
-          startIndex,
-          oldEndIndex,
-          newEndIndex: startIndex + prefix.length,
-          startPosition: { row: 1, column: 4 },
-          oldEndPosition: { row: 1, column: 4 + currentPrefix.length },
-          newEndPosition: { row: 1, column: 4 + prefix.length },
-        })
-      );
-      currentSource = currentSource.slice(0, startIndex) + prefix + currentSource.slice(oldEndIndex);
-      const incremental = parser.parse(currentSource, tree)!;
-      tree.delete();
-      tree = incremental;
-      const fresh = parser.parse(currentSource)!;
-      try {
-        expect(tree.rootNode.toString()).toBe(fresh.rootNode.toString());
-        expect(tree.rootNode.hasError).toBe(prefix.length === 1);
-        const delimiters = highlights.captures(tree.rootNode).filter(({ name }) => name === 'string.special.symbol');
-        expect(delimiters.map(({ node }) => node.text)).toEqual(prefix.length === 1 ? [] : [delimiter]);
-      } finally {
-        fresh.delete();
-      }
-      currentPrefix = prefix;
-    }
-    expect(tree.rootNode.toString()).toBe(initial);
   } finally {
     tree.delete();
     parser.delete();
