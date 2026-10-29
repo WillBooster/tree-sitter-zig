@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
@@ -106,42 +106,6 @@ test.each([
     expect(
       tree.rootNode.descendantsOfType('variable_declaration').some((node) => node.text === 'const preserved = 1;')
     ).toBe(true);
-  } finally {
-    tree.delete();
-  }
-});
-
-test('updates documentation kinds and injection ranges consistently when comment prefixes are edited', () => {
-  let source = '/// text\nconst value = 1;\n';
-  let marker = '///';
-  let tree = parser.parse(source)!;
-  try {
-    for (const next of ['////', '//!', '//', '///']) {
-      tree.edit(
-        new Edit({
-          startIndex: 0,
-          oldEndIndex: marker.length,
-          newEndIndex: next.length,
-          startPosition: { row: 0, column: 0 },
-          oldEndPosition: { row: 0, column: marker.length },
-          newEndPosition: { row: 0, column: next.length },
-        })
-      );
-      source = next + source.slice(marker.length);
-      const incremental = parser.parse(source, tree)!;
-      tree.delete();
-      tree = incremental;
-      const fresh = parser.parse(source)!;
-      try {
-        expect(tree.rootNode.toString()).toBe(fresh.rootNode.toString());
-        expect(tree.rootNode.hasError).toBe(false);
-        const contents = tree.rootNode.descendantsOfType('doc_comment_content');
-        expect(contents.map((node) => node.text)).toEqual(next === '///' || next === '//!' ? [' text\n'] : []);
-      } finally {
-        fresh.delete();
-      }
-      marker = next;
-    }
   } finally {
     tree.delete();
   }

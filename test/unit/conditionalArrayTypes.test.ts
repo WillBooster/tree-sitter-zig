@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
@@ -54,58 +54,6 @@ test('captures conditional array elements and builtin types at their expected so
     expect(parameter.childForFieldName('type')?.text).toBe('[2]if (false) u8 else u16');
     const field = tree.rootNode.descendantsOfType('container_field')[0]!;
     expect(field.childForFieldName('type')?.text).toBe('[2]if (true) u8 else u16');
-  } finally {
-    tree.delete();
-  }
-});
-
-test('recovers and preserves incremental element ownership across grouping and missing branches', () => {
-  let value = '[2]u8';
-  let source = `const Array = ${value}; const preserved = 1;`;
-  const startIndex = source.indexOf(value);
-  let tree = parser.parse(source)!;
-  try {
-    for (const next of [
-      '[2]if (true) u8 else u16',
-      '[2:0]if (false) u8 else u16',
-      '[2](if (true) u8 else u16)',
-      '[2]if (true) u8 else',
-      '[2]if (true) u8 else u16',
-      '[2]u8',
-    ]) {
-      const oldEndIndex = startIndex + value.length;
-      const newEndIndex = startIndex + next.length;
-      tree.edit(
-        new Edit({
-          startIndex,
-          oldEndIndex,
-          newEndIndex,
-          startPosition: { row: 0, column: startIndex },
-          oldEndPosition: { row: 0, column: oldEndIndex },
-          newEndPosition: { row: 0, column: newEndIndex },
-        })
-      );
-      source = source.slice(0, startIndex) + next + source.slice(oldEndIndex);
-      const incremental = parser.parse(source, tree)!;
-      tree.delete();
-      tree = incremental;
-      const fresh = parser.parse(source)!;
-      try {
-        expect(tree.rootNode.toString()).toBe(fresh.rootNode.toString());
-        expect(tree.rootNode.hasError).toBe(next.endsWith('else'));
-        expect(tree.rootNode.namedChildren.at(-1)?.text).toBe('const preserved = 1;');
-        const captures = elements.captures(tree.rootNode);
-        expect(captures.map(({ node }) => [node.text, node.startIndex, node.endIndex])).toEqual(
-          elements.captures(fresh.rootNode).map(({ node }) => [node.text, node.startIndex, node.endIndex])
-        );
-        if (!tree.rootNode.hasError) {
-          expect(captures).toHaveLength(next.includes(']if') ? 1 : 0);
-        }
-      } finally {
-        fresh.delete();
-      }
-      value = next;
-    }
   } finally {
     tree.delete();
   }

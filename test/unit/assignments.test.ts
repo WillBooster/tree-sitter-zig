@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Edit, Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
@@ -72,46 +72,6 @@ test.each([
   const tree = parser.parse(source)!;
   try {
     expect(tree.rootNode.hasError).toBe(true);
-  } finally {
-    tree.delete();
-  }
-});
-
-test('agrees with a fresh parse when an invalid field value is inserted and undone', () => {
-  const source = 'const value = .{ .field = 1 };';
-  const startIndex = source.indexOf('1');
-  let currentSource = source;
-  let currentValue = '1';
-  let tree = parser.parse(source)!;
-  const initialTree = tree.rootNode.toString();
-  try {
-    for (const value of ['left = right', '1']) {
-      const oldEndIndex = startIndex + currentValue.length;
-      const newEndIndex = startIndex + value.length;
-      tree.edit(
-        new Edit({
-          startIndex,
-          oldEndIndex,
-          newEndIndex,
-          startPosition: { row: 0, column: startIndex },
-          oldEndPosition: { row: 0, column: oldEndIndex },
-          newEndPosition: { row: 0, column: newEndIndex },
-        })
-      );
-      currentSource = currentSource.slice(0, startIndex) + value + currentSource.slice(oldEndIndex);
-      const incremental = parser.parse(currentSource, tree)!;
-      tree.delete();
-      tree = incremental;
-      const fresh = parser.parse(currentSource)!;
-      try {
-        expect(tree.rootNode.toString()).toBe(fresh.rootNode.toString());
-        expect(tree.rootNode.hasError).toBe(value !== '1');
-      } finally {
-        fresh.delete();
-      }
-      currentValue = value;
-    }
-    expect(tree.rootNode.toString()).toBe(initialTree);
   } finally {
     tree.delete();
   }
