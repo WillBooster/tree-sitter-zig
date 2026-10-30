@@ -11,7 +11,7 @@ parser.setLanguage(language);
 
 afterAll(() => parser.delete());
 
-test('exposes only the prefix operand through try nodes and structural queries', () => {
+test('exposes only the prefix operand through try nodes', () => {
   const source = readFileSync(new URL('../fixtures/tryExpressions.zig', import.meta.url), 'utf8');
   const tree = parser.parse(source)!;
   const query = new Query(language, '(binary_expression left: (try_expression (call_expression)) @propagation)');

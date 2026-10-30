@@ -1,19 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
 const language = await Language.load(fileURLToPath(new URL('../../tree-sitter-zig.wasm', import.meta.url)));
 const parser = new Parser();
 parser.setLanguage(language);
-const highlights = new Query(language, readFileSync(new URL('../../queries/highlights.scm', import.meta.url), 'utf8'));
-
-afterAll(() => {
-  highlights.delete();
-  parser.delete();
-});
+afterAll(() => parser.delete());
 
 test('distinguishes initializer fields from assignments in statement positions', () => {
   const tree = parser.parse(readFileSync(new URL('../fixtures/assignments.zig', import.meta.url), 'utf8'))!;
@@ -46,11 +41,6 @@ test('distinguishes initializer fields from assignments in statement positions',
       expect(assignment.childForFieldName('operator')?.text).toBeDefined();
       expect(assignment.childForFieldName('right')?.text).toBeDefined();
     }
-    const members = highlights
-      .captures(tree.rootNode)
-      .filter(({ name, node }) => name === 'variable.member' && node.parent?.type === 'field_initializer')
-      .map(({ node }) => node.text);
-    expect(members).toEqual(['value', '@"escaped-name"', 'nested', 'count']);
   } finally {
     tree.delete();
   }

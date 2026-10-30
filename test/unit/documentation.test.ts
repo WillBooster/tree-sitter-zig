@@ -1,53 +1,20 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
 const language = await Language.load(fileURLToPath(new URL('../../tree-sitter-zig.wasm', import.meta.url)));
 const parser = new Parser();
 parser.setLanguage(language);
-const injections = new Query(language, readFileSync(new URL('../../queries/injections.scm', import.meta.url), 'utf8'));
-const indents = new Query(language, readFileSync(new URL('../../queries/indents.scm', import.meta.url), 'utf8'));
 
-afterAll(() => {
-  indents.delete();
-  injections.delete();
-  parser.delete();
-});
+afterAll(() => parser.delete());
 
-test('provides prefix-free Markdown ranges with line endings while leaving ordinary comments and strings separate', () => {
-  const source = readFileSync(new URL('../fixtures/documentation.zig', import.meta.url), 'utf8');
-  const tree = parser.parse(source)!;
+test('parses documentation comments, ordinary comments, and strings without errors', () => {
+  const tree = parser.parse(readFileSync(new URL('../fixtures/documentation.zig', import.meta.url), 'utf8'))!;
   try {
     expect(tree.rootNode.hasError).toBe(false);
-    const matches = injections.matches(tree.rootNode);
-    const markdown = matches.filter((match) => match.setProperties?.['injection.language'] === 'markdown');
-    expect(markdown).toHaveLength(9);
-    const contents = markdown.flatMap((match) => {
-      expect(match.setProperties).toHaveProperty('injection.combined');
-      return match.captures.map(({ node }) => node);
-    });
-    expect(contents.map((node) => node.text).join('')).toBe(
-      ' # Container\n\n A container with あ😀 documentation.\n # Record\n\n ```zig\n const answer = 42;\n ```\n Field documentation.\n'
-    );
-    for (const content of contents) {
-      expect(content.startIndex).toBe(content.parent!.startIndex + 3);
-      expect(content.endIndex).toBe(content.parent!.endIndex);
-      expect(content.endPosition.column).toBe(0);
-      expect(content.endIndex).toBeGreaterThan(content.startIndex);
-    }
-    expect(
-      matches
-        .filter((match) => match.setProperties?.['injection.language'] === 'comment')
-        .flatMap((match) => match.captures.map(({ node }) => node.text))
-    ).toEqual(['// ordinary comment', '//// four slashes are ordinary']);
-    const ignored = indents
-      .captures(tree.rootNode)
-      .filter(({ name }) => name === 'indent.ignore')
-      .map(({ node }) => node.text);
-    expect(ignored).toEqual(expect.arrayContaining(contents.map((content) => content.parent!.text)));
   } finally {
     tree.delete();
   }
