@@ -7,8 +7,6 @@
       "scope": "source.zig",
       "path": ".",
       "file-types": ["zig"],
-      "highlights": "queries/highlights.scm",
-      "injections": "queries/injections.scm",
       "injection-regex": "^zig$"
     }
   ],

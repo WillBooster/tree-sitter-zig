@@ -5,7 +5,7 @@
 [![Test](https://github.com/WillBooster/tree-sitter-zig/actions/workflows/test.yml/badge.svg)](https://github.com/WillBooster/tree-sitter-zig/actions/workflows/test.yml)
 [![Test rust](https://github.com/WillBooster/tree-sitter-zig/actions/workflows/test-rust.yml/badge.svg)](https://github.com/WillBooster/tree-sitter-zig/actions/workflows/test-rust.yml)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![wbfy](https://img.shields.io/badge/wbfy-20.49.0-1e90ff.svg)](https://github.com/WillBooster/shared/tree/main/packages/wbfy)
+[![wbfy](https://img.shields.io/badge/wbfy-20.51.1-1e90ff.svg)](https://github.com/WillBooster/shared/tree/main/packages/wbfy)
 [![crates.io](https://img.shields.io/crates/v/willbooster-tree-sitter-zig.svg)](https://crates.io/crates/willbooster-tree-sitter-zig)
 
 Zig grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter), forked from
@@ -26,19 +26,19 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   `~x`) or only continue one (`+`, `orelse`), and so do ranges outside `for` loops.
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
-- Multiline strings expose each `\\` line delimiter and nonempty `string_content` children. The delimiters receive
-  the `@string.special.symbol` highlight capture. Line endings are outside the content nodes.
+- Multiline strings expose each `\\` line delimiter and nonempty `string_content` children. Line endings are outside
+  the content nodes.
 - `///` and `//!` produce `doc_comment` and `container_doc_comment` nodes. Their `doc_comment_content` children
-  exclude the prefix and include the line ending when present, so the injection query can combine them as Markdown.
+  exclude the prefix and include the line ending when present.
   An empty comment at EOF has no content child. Ordinary comments, including `////`, remain `comment` nodes.
-  Queries that need every comment kind must match all three node types.
+  Code that handles every comment kind must match all three node types.
 
 - Error sets are accepted directly as container field types, and pointer, slice and array element types may be conditional.
 - `async` and `await` are ordinary identifiers. Assembly clobbers use an expression, including an anonymous struct
   initializer, as in Zig 0.16.
 - Zero-bit integers `u0` and `i0` are builtin types.
 - Quoted identifiers such as `@"hello world"` expose their content directly inside `identifier`, without a nested
-  `string` node, so string highlighting applies only to literals.
+  `string` node.
 - Boolean negation is a `unary_expression`. Inferred error unions (`!T`) occur only in function return types;
   their payload includes suffixes such as calls and field access (`!List(T)` or `!ns.Result`). Explicit error
   unions (`E!T`) retain their error and payload types.
@@ -48,6 +48,13 @@ rejects it. It parses as the parser in upstream's 1.1.2 packages does, with thes
   Plain block assignments, `else` alternatives, and `comptime` assignments retain `variable_declaration` nodes.
   `assignment_expression` nodes expose `left`, `operator`, and `right` fields.
   Struct field initializers produce `field_initializer` nodes with `name` and `value` fields.
+
+## Support Scope
+
+This fork maintains only full parsing: valid input yields a correct tree, and invalid input yields `ERROR` or `MISSING`
+nodes without crashing, hanging, or taking more than linear time. Incremental parsing works as in upstream tree-sitter
+but is not tested here, and no queries (highlights, locals, injections, tags) are shipped. Node types, field names, and
+the trees that error recovery produces may change; such changes are released as new major versions.
 
 ## Usage
 
@@ -92,7 +99,7 @@ const parser = new Parser();
 parser.setLanguage(await Language.load(zig));
 ```
 
-The package also ships `grammar.js`, the queries in `queries/`, and the node types in `src/node-types.json`.
+The package also ships `grammar.js` and the node types in `src/node-types.json`.
 It includes `src/scanner.c`, which must be compiled with a parser regenerated from this grammar.
 
 In Rust, depend on the [crate](https://crates.io/crates/willbooster-tree-sitter-zig) and on
