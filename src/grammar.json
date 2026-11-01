@@ -43,10 +43,6 @@
                     "name": "function_declaration"
                   },
                   {
-                    "type": "SYMBOL",
-                    "name": "using_namespace_declaration"
-                  },
-                  {
                     "type": "SEQ",
                     "members": [
                       {
@@ -1000,35 +996,6 @@
         {
           "type": "STRING",
           "value": "..."
-        }
-      ]
-    },
-    "using_namespace_declaration": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "pub"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "usingnamespace"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expression"
-        },
-        {
-          "type": "STRING",
-          "value": ";"
         }
       ]
     },

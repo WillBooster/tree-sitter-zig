@@ -103,7 +103,6 @@ module.exports = grammar({
           $.comptime_declaration,
           $.variable_declaration,
           $.function_declaration,
-          $.using_namespace_declaration,
           seq($.container_field, ','),
         )),
         optional($.container_field),
@@ -232,13 +231,6 @@ module.exports = grammar({
         field('type', choice($.type_expression, $.if_type_expression, $.comptime_type_expression)),
       ),
       '...',
-    ),
-
-    using_namespace_declaration: $ => seq(
-      optional('pub'),
-      'usingnamespace',
-      $.expression,
-      ';',
     ),
 
     block: $ => seq(

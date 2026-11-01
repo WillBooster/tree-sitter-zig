@@ -228,13 +228,13 @@ comptime {
             (builtin_type)))))))
 
 ================================================================================
-Usingnamespace and doc comments
+Variable declarations and doc comments
 ================================================================================
 
 //! Module documentation.
 
-/// Adds numbers.
-pub usingnamespace @import("other.zig");
+/// Imported module.
+pub const other = @import("other.zig");
 
 // A line comment.
 const x = 1; // trailing
@@ -246,7 +246,8 @@ const x = 1; // trailing
     (doc_comment_content))
   (doc_comment
     (doc_comment_content))
-  (using_namespace_declaration
+  (variable_declaration
+    (identifier)
     (builtin_function
       (builtin_identifier)
       (arguments
@@ -278,3 +279,26 @@ const E = union {};
     (if_expression (boolean) (builtin_type) (struct_declaration)))
   (variable_declaration (identifier) (enum_declaration))
   (variable_declaration (identifier) (union_declaration)))
+
+================================================================================
+Removed keywords as container fields
+================================================================================
+
+const Fields = struct { usingnamespace: u8, async: u8, await: u8 };
+const Tags = enum { usingnamespace, async, await };
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (variable_declaration
+    (identifier)
+    (struct_declaration
+      (container_field name: (identifier) type: (builtin_type))
+      (container_field name: (identifier) type: (builtin_type))
+      (container_field name: (identifier) type: (builtin_type))))
+  (variable_declaration
+    (identifier)
+    (enum_declaration
+      (container_field name: (identifier))
+      (container_field name: (identifier))
+      (container_field name: (identifier)))))
