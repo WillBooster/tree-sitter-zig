@@ -22,10 +22,15 @@ void tree_sitter_zig_external_scanner_deserialize(void *payload, const char *buf
     (void)length;
 }
 
+static inline bool at_eof(const TSLexer *lexer) { return lexer->lookahead == 0 && lexer->eof(lexer); }
+
 bool tree_sitter_zig_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
     (void)payload;
-    if (valid_symbols[ERROR_SENTINEL]) return false;
-    if (lexer->eof(lexer)) {
+    if (valid_symbols[ERROR_SENTINEL] ||
+        (!valid_symbols[DOC_COMMENT_CONTENT] && !valid_symbols[EMPTY_DOC_COMMENT_CONTENT])) {
+        return false;
+    }
+    if (at_eof(lexer)) {
         if (!valid_symbols[EMPTY_DOC_COMMENT_CONTENT]) return false;
         lexer->result_symbol = EMPTY_DOC_COMMENT_CONTENT;
         return true;
@@ -35,7 +40,7 @@ bool tree_sitter_zig_external_scanner_scan(void *payload, TSLexer *lexer, const 
         int32_t character = lexer->lookahead;
         lexer->advance(lexer, false);
         if (character == '\n') break;
-    } while (!lexer->eof(lexer));
+    } while (!at_eof(lexer));
     lexer->result_symbol = DOC_COMMENT_CONTENT;
     return true;
 }

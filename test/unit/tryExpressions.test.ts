@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
@@ -14,7 +14,6 @@ afterAll(() => parser.delete());
 test('exposes only the prefix operand through try nodes', () => {
   const source = readFileSync(new URL('../fixtures/tryExpressions.zig', import.meta.url), 'utf8');
   const tree = parser.parse(source)!;
-  const query = new Query(language, '(binary_expression left: (try_expression (call_expression)) @propagation)');
   try {
     expect(tree.rootNode.hasError).toBe(false);
     expect(tree.rootNode.descendantsOfType('try_expression').map((node) => node.text)).toEqual([
@@ -25,13 +24,18 @@ test('exposes only the prefix operand through try nodes', () => {
       'try if (fail) number(true) else number(false)',
       'try evaluate(false)',
     ]);
-    expect(query.captures(tree.rootNode).map(({ node }) => node.text)).toEqual([
+    const propagations = tree.rootNode.descendantsOfType('binary_expression').flatMap((node) => {
+      const left = node.childForFieldName('left');
+      return left?.type === 'try_expression' && left.namedChildren.some((child) => child.type === 'call_expression')
+        ? [left]
+        : [];
+    });
+    expect(propagations.map((node) => node.text)).toEqual([
       'try number(fail)',
       'try number(false)',
       'try evaluate(false)',
     ]);
   } finally {
-    query.delete();
     tree.delete();
   }
 });

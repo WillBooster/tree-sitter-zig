@@ -1,17 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { Language, Parser, Query } from '@willbooster/web-tree-sitter';
+import { Language, Parser } from '@willbooster/web-tree-sitter';
 import { afterAll, expect, test } from 'vitest';
 
 await Parser.init();
 const language = await Language.load(fileURLToPath(new URL('../../tree-sitter-zig.wasm', import.meta.url)));
 const parser = new Parser();
 parser.setLanguage(language);
-const elements = new Query(language, '(array_type (if_type_expression) @element)');
 
 afterAll(() => {
-  elements.delete();
   parser.delete();
 });
 
@@ -20,7 +18,9 @@ test('parses conditional array elements at their expected source ranges', () => 
   const tree = parser.parse(source)!;
   try {
     expect(tree.rootNode.hasError).toBe(false);
-    const captured = elements.captures(tree.rootNode).map(({ node }) => node);
+    const captured = tree.rootNode
+      .descendantsOfType('array_type')
+      .flatMap((node) => node.namedChildren.filter((child) => child.type === 'if_type_expression'));
     expect(captured.map((node) => node.text)).toEqual([
       'if (true) u8 else u16',
       'if (false) u8 else u16',
