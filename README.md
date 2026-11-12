@@ -14,8 +14,10 @@ to its authors and contributors. This is not an official release of that project
 
 This fork builds on the grammar of upstream's version 1.1.2 and generates the parser with the
 [WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries that fork's own ABI
-number (`0x5742000c`) and loads only with that fork's runtime, version 17.0.1 or later in the 17.x series: upstream's tree-sitter runtime
-rejects it. It parses as the parser in upstream's 1.1.2 packages does, with these exceptions:
+number (`0x5742000c`), which upstream's tree-sitter runtimes reject. Use that fork's runtime, version 19.1.1 or later in
+the 19.x series: earlier WillBooster runtimes share ABI `0x5742000c` and pass the ABI check, whereas `19.1.0+` omits
+unused `TSLanguage` tables (`alias_map` and `primary_state_bitmap`) that `17.x`/`18.x` runtimes and `19.0.x` Wasm
+loaders dereference. It parses as the parser in upstream's 1.1.2 packages does, with these exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
   the one before `..`, for example `(`, `[`, `.`, `*`, `&`, `-`, or `!` (as in `for (0..(n)) |i| {}` or
@@ -60,7 +62,7 @@ the trees that error recovery produces may change; such changes are released as 
 ## Usage
 
 The npm package ships `tree-sitter-zig.wasm` for
-[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 17.0.1 or later in the 17.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
+[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 19.1.1 or later in the 19.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
 In Node.js and Bun, load the grammar from its path:
 
 ```js
@@ -108,7 +110,7 @@ In Rust, depend on the [crate](https://crates.io/crates/willbooster-tree-sitter-
 fuzzed with:
 
 ```sh
-cargo add willbooster-tree-sitter@17.0.1 --rename tree-sitter
+cargo add willbooster-tree-sitter@19.1.1 --rename tree-sitter
 cargo add willbooster-tree-sitter-zig --rename tree-sitter-zig
 ```
 

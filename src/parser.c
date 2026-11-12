@@ -2436,37 +2436,6 @@ static const TSSymbol ts_alias_sequences[56] = {
   [48] = sym_assignment_expression,
 };
 
-static const uint16_t ts_non_terminal_alias_map[] = {
-  sym__function_prototype, 2,
-    sym__function_prototype,
-    alias_sym_function_signature,
-  sym__single_assignment_expression, 2,
-    sym__single_assignment_expression,
-    sym_assignment_expression,
-  sym_builtin_type, 2,
-    sym_builtin_type,
-    sym_identifier,
-  0,
-};
-
-static const uint8_t ts_primary_state_bitmap[] = {
-  255, 255, 253, 223, 255, 255, 255, 254, 255, 252, 255, 255, 255, 255, 255, 211, 
-  255, 255, 255, 255, 247, 255, 159, 254, 207, 255, 255, 255, 255, 255, 255, 255, 
-  243, 247, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-  255, 255, 255, 255, 255, 255, 255, 191, 255, 255, 255, 255, 255, 253, 255, 254, 
-  255, 1, 0, 0, 240, 231, 207, 129, 35, 0, 152, 113, 1, 4, 0, 30, 
-  0, 158, 4, 2, 44, 60, 107, 0, 0, 216, 60, 15, 0, 0, 66, 0, 
-  148, 14, 250, 255, 255, 255, 63, 6, 1, 232, 7, 1, 72, 0, 12, 0, 
-  58, 5, 0, 0, 0, 0, 18, 64, 8, 1, 0, 0, 0, 0, 0, 0, 
-  0, 248, 255, 191, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-  30, 96, 247, 255, 111, 102, 0, 0, 192, 255, 255, 195, 123, 166, 18, 0, 
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 
-  0, 0, 32, 48, 0, 0, 0, 0, 0, 255, 123, 31, 156, 222, 47, 154, 
-  100, 4, 131, 81, 253, 119, 255, 35, 149, 67, 252, 255, 183, 180, 247, 132, 
-  212, 223, 145, 254, 94, 172, 191, 111, 114, 232, 1, 133, 92, 0, 0, 
-};
-
 static const TSSymbol ts_supertype_symbols[SUPERTYPE_COUNT] = {
   sym_expression,
   sym_primary_type_expression,
@@ -26680,7 +26649,6 @@ TS_PUBLIC const TSLanguage *tree_sitter_zig(void) {
     .supertype_symbols = ts_supertype_symbols,
     .symbol_metadata = ts_symbol_metadata,
     .public_symbol_map = ts_symbol_map,
-    .alias_map = ts_non_terminal_alias_map,
     .alias_sequences = ts_alias_sequences,
     .alias_sequence_offsets = ts_alias_sequence_offsets,
     .alias_sequence_count = 56,
@@ -26700,7 +26668,6 @@ TS_PUBLIC const TSLanguage *tree_sitter_zig(void) {
       tree_sitter_zig_external_scanner_serialize,
       tree_sitter_zig_external_scanner_deserialize,
     },
-    .primary_state_bitmap = ts_primary_state_bitmap,
     .name = "zig",
     .max_reserved_word_set_size = 0,
     .metadata = {
