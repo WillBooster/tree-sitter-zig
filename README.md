@@ -13,11 +13,10 @@ Zig grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter), forke
 to its authors and contributors. This is not an official release of that project.
 
 This fork builds on the grammar of upstream's version 1.1.2 and generates the parser with the
-[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries that fork's own ABI
-number (`0x5742000c`), which upstream's tree-sitter runtimes reject. Use that fork's runtime, version 19.1.1 or later in
-the 19.x series: earlier WillBooster runtimes share ABI `0x5742000c` and pass the ABI check, whereas `19.1.0+` omits
-unused `TSLanguage` tables (`alias_map` and `primary_state_bitmap`) that `17.x`/`18.x` runtimes and `19.0.x` Wasm
-loaders dereference. It parses as the parser in upstream's 1.1.2 packages does, with these exceptions:
+[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries ABI `0x5742000c`,
+which upstream's tree-sitter runtimes reject, and is tested and supported with the WillBooster/tree-sitter runtime,
+version 20.0.0 or later in the 20.x series. It parses as the parser in upstream's 1.1.2 packages does, with these
+exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
   the one before `..`, for example `(`, `[`, `.`, `*`, `&`, `-`, or `!` (as in `for (0..(n)) |i| {}` or
@@ -55,14 +54,14 @@ loaders dereference. It parses as the parser in upstream's 1.1.2 packages does, 
 ## Support Scope
 
 This fork maintains only full parsing: valid input yields a correct tree, and invalid input yields `ERROR` or `MISSING`
-nodes without crashing, hanging, or taking more than linear time. Incremental parsing works as in upstream tree-sitter
-but is not tested here, and no queries (highlights, locals, injections, tags) are shipped. Node types, field names, and
-the trees that error recovery produces may change; such changes are released as new major versions.
+nodes without crashing, hanging, or taking more than linear time. Incremental parsing is not supported, and no queries
+(highlights, locals, injections, tags) are shipped. Node types, field names, and the trees that error recovery produces
+may change; such changes are released as new major versions.
 
 ## Usage
 
 The npm package ships `tree-sitter-zig.wasm` for
-[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 19.1.1 or later in the 19.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
+[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 20.0.0 or later in the 20.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
 In Node.js and Bun, load the grammar from its path:
 
 ```js
@@ -110,7 +109,7 @@ In Rust, depend on the [crate](https://crates.io/crates/willbooster-tree-sitter-
 fuzzed with:
 
 ```sh
-cargo add willbooster-tree-sitter@19.1.1 --rename tree-sitter
+cargo add willbooster-tree-sitter@20.0.0 --rename tree-sitter
 cargo add willbooster-tree-sitter-zig --rename tree-sitter-zig
 ```
 
@@ -124,50 +123,16 @@ parser.set_language(&tree_sitter_zig::LANGUAGE.into())?;
 ```sh
 mise install
 bun install --frozen-lockfile
-bun run test/ci-setup # installs Chromium for the browser test
+bun run test/ci-setup
 bun run build/ci
+bun run verify
 bun run test
-script/parse-examples
-cargo test
+cargo test --locked
 ```
 
-The scripts and tests generate, build, test, and parse with `script/tree-sitter`, the tree-sitter CLI of the
-WillBooster/tree-sitter runtime version locked in `Cargo.lock`, since the generator and the runtime of upstream's CLI are
-not the ones this package ships with. Its first run downloads that CLI from the runtime's GitHub Release, or builds it
-with `cargo` (whose build runs the CMake that `mise.toml` pins) when the download fails or the release has no binary that runs here. Run other CLI commands through it as
-well (e.g. `script/tree-sitter parse file.zig`).
+Run tree-sitter CLI commands through `script/tree-sitter`, such as `script/tree-sitter parse file.zig`. It runs the `WillBooster/tree-sitter` CLI at the runtime version locked in `Cargo.lock`. `@willbooster/web-tree-sitter` in `package.json` and `willbooster-tree-sitter` in `Cargo.lock` must stay at the same version (`test/unit/runtimeVersion.test.ts`).
 
-`bun run generate` records a fresh generation profile from the applicable `test/corpus` cases, then generates
-compact parser tables. It would also profile files tracked in `examples/`, but this repository tracks none: upstream
-ships neither examples nor a corpus, so the cases in `test/corpus` were written for this fork, with the trees upstream's
-packaged parser gives them, except where the parsing differences listed above apply. Those cases pin this fork's
-reading. The parser also embeds metadata from `tree-sitter.json`.
-After changing a grammar, `tree-sitter.json`, or a corpus case, regenerate and commit `src/`.
-Profiles in `.tmp/generation-profiles/` are temporary and must not be committed. `bun run build-wasm`, `bun run build/ci`,
-and the release build regenerate the parsers before compiling them.
-
-`bun run test` runs:
-
-- the corpus in `test/corpus`, with the native build and with the Wasm build (the first run downloads the WASI SDK);
-- a check that the real-world Zig files in `examples/` fail to parse exactly as listed in
-  `script/known-failures.txt`, while every library file from the pinned Zig 0.16 release must parse without errors.
-  The older Zig corpus retains coverage of unsupported syntax. The first run fetches the repositories and the
-  checksum-pinned Zig source archive. Their revisions are pinned in `script/parse-examples`. After a grammar change or a moved pin alters that list, `script/parse-examples` rewrites it;
-  review its diff before committing;
-- a performance check (`test/unit/performance.test.ts`) that recovering from an error on each line takes linear
-  time, since consumers parse files while they are being edited. It loads the Wasm build through
-  @willbooster/web-tree-sitter, which `bun run build/ci` rebuilds after regenerating the parser;
-- a check (`test/unit/runtimeVersion.test.ts`) that `@willbooster/web-tree-sitter` in `package.json` and
-  `willbooster-tree-sitter` in `Cargo.lock` are the same version, since the Wasm tests run on the former and the Rust
-  tests, the fuzzer, and the CLI on the latter;
-- tests that load the Wasm build with @willbooster/web-tree-sitter in Chromium (`test/e2e/browser.test.ts`) and in
-  Cloudflare Workers with and without Node.js compatibility (`test/e2e/workers.test.ts`).
-
-The tests and `script/parse-examples` compile the parser into `.tmp/tree-sitter-lib` rather than the CLI's cache shared
-by every checkout.
-
-CI also runs these tests on Linux arm64 and macOS, where the CLI compiles the parser natively, and fuzzes the parser
-with libFuzzer and sanitizers (`.github/workflows/robustness.yml`).
+After changing `grammar.js`, `tree-sitter.json`, or `test/corpus`, run `bun run build/ci` and commit `src/`. When a grammar change or a moved pin in `script/parse-examples` alters which real-world Zig files fail to parse, run `script/parse-examples` to update `script/known-failures.txt` and review its diff before committing.
 
 ### References
 
