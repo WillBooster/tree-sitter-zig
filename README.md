@@ -13,9 +13,9 @@ Zig grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter), forke
 to its authors and contributors. This is not an official release of that project.
 
 This fork builds on the grammar of upstream's version 1.1.2 and generates the parser with the
-[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries ABI `0x5742000c`,
+[WillBooster/tree-sitter](https://github.com/WillBooster/tree-sitter) generator. The parser carries ABI `0x5742000d`,
 which upstream's tree-sitter runtimes reject, and is tested and supported with the WillBooster/tree-sitter runtime,
-version 20.0.0 or later in the 20.x series. It parses as the parser in upstream's 1.1.2 packages does, with these
+version 23.0.0 or later in the 23.x series. It parses as the parser in upstream's 1.1.2 packages does, with these
 exceptions:
 
 - In the ranges a `for` loop iterates over, a range end whose first token can both start an expression and continue
@@ -61,7 +61,7 @@ may change; such changes are released as new major versions.
 ## Usage
 
 The npm package ships `tree-sitter-zig.wasm` for
-[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 20.0.0 or later in the 20.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
+[@willbooster/web-tree-sitter](https://www.npmjs.com/package/@willbooster/web-tree-sitter) version 23.0.0 or later in the 23.x series, which runs in Node.js, Bun, browsers, and Cloudflare Workers.
 In Node.js and Bun, load the grammar from its path:
 
 ```js
@@ -109,7 +109,7 @@ In Rust, depend on the [crate](https://crates.io/crates/willbooster-tree-sitter-
 fuzzed with:
 
 ```sh
-cargo add willbooster-tree-sitter@20.0.0 --rename tree-sitter
+cargo add willbooster-tree-sitter@23.0.0 --rename tree-sitter
 cargo add willbooster-tree-sitter-zig --rename tree-sitter-zig
 ```
 
