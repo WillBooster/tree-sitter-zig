@@ -85,18 +85,27 @@ test.each([
   'const S=union(enum) { mem: switch(os){else=>u8} };',
   'const S=opaque { mem: switch(os){else=>u8} };',
   'const S=struct { comptime mem: switch(os){else=>u8}=1 };',
-  'const S=struct { mem: while(c){} else u8 };',
   'fn f(mem: switch(os){else=>u8}) void {}',
   'fn f(comptime mem: switch(os){else=>u8}) void {}',
   'const F=fn(mem: switch(os){else=>u8}) void;',
 ])('preserves declaration names before control flow types: %s', (source) => {
   const tree = parser.parse(source)!;
   try {
-    if (!source.includes('while(c)')) expect(tree.rootNode.hasError).toBe(false);
+    expect(tree.rootNode.hasError).toBe(false);
     const declaration = tree.rootNode.descendantsOfType(['container_field', 'parameter'])[0];
     assert.ok(declaration);
     expect(declaration.childForFieldName('name')?.text).toBe('mem');
-    expect(declaration.childForFieldName('type')).toBeDefined();
+    expect(declaration.childForFieldName('type')?.type).toBe('switch_expression');
+  } finally {
+    tree.delete();
+  }
+});
+
+test('keeps a declaration name when recovering from a malformed loop type', () => {
+  const tree = parser.parse('const S=struct { mem: while(c){} else u8 };')!;
+  try {
+    expect(tree.rootNode.hasError).toBe(true);
+    expect(tree.rootNode.descendantsOfType('container_field')[0]?.childForFieldName('name')?.text).toBe('mem');
   } finally {
     tree.delete();
   }
