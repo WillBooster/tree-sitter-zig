@@ -31,3 +31,51 @@ test.each([
     tree.delete();
   }
 });
+
+test.each(['', 'comptime ', 'noalias '])('does not reinterpret a %sparameter name as a block label', (modifier) => {
+  for (const body of ['break :a u8;', 'return;']) {
+    const tree = parser.parse(`fn f(${modifier}a: {${body}}) void {}`)!;
+    try {
+      expect(tree.rootNode.hasError).toBe(true);
+    } finally {
+      tree.delete();
+    }
+  }
+});
+
+test.each([
+  'fn f(value: named:{break :named u8;}) void {_=value;}',
+  'extern fn g((unnamed:{break :unnamed u8;})) void;',
+  'extern fn h([size:{break :size 2;}]u8) void;',
+])('retains valid parameter type expression %s', (source) => {
+  const tree = parser.parse(source)!;
+  try {
+    expect(tree.rootNode.hasError).toBe(false);
+  } finally {
+    tree.delete();
+  }
+});
+
+test.each(['fn f(@"quoted name":{return;}) void {}'])(
+  'rejects a raw block after a quoted parameter name: %s',
+  (source) => {
+    const tree = parser.parse(source)!;
+    try {
+      expect(tree.rootNode.hasError).toBe(true);
+    } finally {
+      tree.delete();
+    }
+  }
+);
+
+test.each([
+  'fn f(value // comment\n: u8) void {_=value;}',
+  'fn f(value: labeled:{break :labeled u8;}) void {_=value;}',
+])('allows comments and labeled types after a parameter name: %s', (source) => {
+  const tree = parser.parse(source)!;
+  try {
+    expect(tree.rootNode.hasError).toBe(false);
+  } finally {
+    tree.delete();
+  }
+});

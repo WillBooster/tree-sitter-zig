@@ -54,12 +54,11 @@ const builtinTypes = [
 module.exports = grammar({
   name: 'zig',
 
-  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel],
+  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel, $._parameter_name_colon],
 
   conflicts: $ => [
     [$.block_label, $.primary_type_expression],
     [$.block_label, $.container_field],
-    [$.block_label, $.parameter],
     [$.for_expression],
     [$.while_expression],
 
@@ -229,7 +228,7 @@ module.exports = grammar({
         optional(choice('noalias', 'comptime')),
         optional(seq(
           field('name', choice($.identifier, alias($.builtin_type, $.identifier))),
-          ':',
+          alias($._parameter_name_colon, ':'),
         )),
         field('type', choice($.type_expression, $.if_type_expression, $.comptime_type_expression)),
       ),
@@ -885,37 +884,14 @@ module.exports = grammar({
   },
 });
 
-/**
- * Creates a rule to match optionally match one or more of the rules
- * separated by a comma and optionally ending with a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {ChoiceRule}
- */
 function optionalCommaSep(rule) {
   return optional(optionalCommaSep1(rule));
 }
 
-/**
- * Creates a rule to match one or more of the rules separated by a comma
- * and optionally ending with a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {SeqRule}
- */
 function optionalCommaSep1(rule) {
   return seq(commaSep1(rule), optional(','));
 }
 
-/**
- * Creates a rule to match one or more of the rules separated by a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {SeqRule}
- */
 function commaSep1(rule) {
   return seq(rule, repeat(seq(',', rule)));
 }

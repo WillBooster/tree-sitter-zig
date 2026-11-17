@@ -960,7 +960,12 @@
                       }
                     },
                     {
-                      "type": "STRING",
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_parameter_name_colon"
+                      },
+                      "named": false,
                       "value": ":"
                     }
                   ]
@@ -6618,10 +6623,6 @@
       "container_field"
     ],
     [
-      "block_label",
-      "parameter"
-    ],
-    [
       "for_expression"
     ],
     [
@@ -6688,6 +6689,10 @@
     {
       "type": "SYMBOL",
       "name": "_error_sentinel"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_parameter_name_colon"
     }
   ],
   "inline": [
