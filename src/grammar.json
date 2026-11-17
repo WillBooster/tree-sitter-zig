@@ -5481,8 +5481,8 @@
       ]
     },
     "block_label": {
-      "type": "PREC",
-      "value": -1,
+      "type": "PREC_DYNAMIC",
+      "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -6609,6 +6609,18 @@
     }
   ],
   "conflicts": [
+    [
+      "block_label",
+      "primary_type_expression"
+    ],
+    [
+      "block_label",
+      "container_field"
+    ],
+    [
+      "block_label",
+      "parameter"
+    ],
     [
       "for_expression"
     ],

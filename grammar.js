@@ -57,6 +57,9 @@ module.exports = grammar({
   externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel],
 
   conflicts: $ => [
+    [$.block_label, $.primary_type_expression],
+    [$.block_label, $.container_field],
+    [$.block_label, $.parameter],
     [$.for_expression],
     [$.while_expression],
 
@@ -772,7 +775,7 @@ module.exports = grammar({
 
     parenthesized_expression: $ => seq('(', $.expression, ')'),
 
-    block_label: $ => prec(-1, seq(
+    block_label: $ => prec.dynamic(1, seq(
       choice($.identifier, alias($.builtin_type, $.identifier)),
       ':',
     )),
