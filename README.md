@@ -25,7 +25,7 @@ exceptions:
   a field access, a binary expression, and so on. tree-sitter CLI 0.27 generates this fork's reading from the same
   grammar. Every other range end reads the same in both, whether its first token can only start an expression (`n`,
   `~x`) or only continue one (`+`, `orelse`), and so do ranges outside `for` loops.
-- Labeled blocks used as indices, slice bounds or sentinels retain their `block_label` inside the expression,
+- Labeled blocks used as indices or slice bounds retain their `block_label` inside the expression,
   instead of splitting the label colon into an index and a sentinel.
 - A NUL character inside a token such as a string or a comment is part of that token, where upstream's lexer reports
   an error.
