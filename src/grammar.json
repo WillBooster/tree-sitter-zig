@@ -207,7 +207,12 @@
                       }
                     },
                     {
-                      "type": "STRING",
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_declaration_name_colon"
+                      },
+                      "named": false,
                       "value": ":"
                     },
                     {
@@ -960,7 +965,12 @@
                       }
                     },
                     {
-                      "type": "STRING",
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_declaration_name_colon"
+                      },
+                      "named": false,
                       "value": ":"
                     }
                   ]
@@ -5481,8 +5491,8 @@
       ]
     },
     "block_label": {
-      "type": "PREC",
-      "value": -1,
+      "type": "PREC_DYNAMIC",
+      "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
@@ -6610,6 +6620,10 @@
   ],
   "conflicts": [
     [
+      "block_label",
+      "primary_type_expression"
+    ],
+    [
       "for_expression"
     ],
     [
@@ -6676,6 +6690,10 @@
     {
       "type": "SYMBOL",
       "name": "_error_sentinel"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_declaration_name_colon"
     }
   ],
   "inline": [

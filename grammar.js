@@ -54,9 +54,10 @@ const builtinTypes = [
 module.exports = grammar({
   name: 'zig',
 
-  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel],
+  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel, $._declaration_name_colon],
 
   conflicts: $ => [
+    [$.block_label, $.primary_type_expression],
     [$.for_expression],
     [$.while_expression],
 
@@ -128,7 +129,7 @@ module.exports = grammar({
       choice(
         seq(
           field('name', choice($.identifier, $._reserved_identifier, alias($.builtin_type, $.identifier))),
-          ':',
+          alias($._declaration_name_colon, ':'),
           field('type', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
         ),
         field('name', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
@@ -226,7 +227,7 @@ module.exports = grammar({
         optional(choice('noalias', 'comptime')),
         optional(seq(
           field('name', choice($.identifier, alias($.builtin_type, $.identifier))),
-          ':',
+          alias($._declaration_name_colon, ':'),
         )),
         field('type', choice($.type_expression, $.if_type_expression, $.comptime_type_expression)),
       ),
@@ -772,7 +773,7 @@ module.exports = grammar({
 
     parenthesized_expression: $ => seq('(', $.expression, ')'),
 
-    block_label: $ => prec(-1, seq(
+    block_label: $ => prec.dynamic(1, seq(
       choice($.identifier, alias($.builtin_type, $.identifier)),
       ':',
     )),
@@ -882,37 +883,14 @@ module.exports = grammar({
   },
 });
 
-/**
- * Creates a rule to match optionally match one or more of the rules
- * separated by a comma and optionally ending with a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {ChoiceRule}
- */
 function optionalCommaSep(rule) {
   return optional(optionalCommaSep1(rule));
 }
 
-/**
- * Creates a rule to match one or more of the rules separated by a comma
- * and optionally ending with a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {SeqRule}
- */
 function optionalCommaSep1(rule) {
   return seq(commaSep1(rule), optional(','));
 }
 
-/**
- * Creates a rule to match one or more of the rules separated by a comma
- *
- * @param {RuleOrLiteral} rule
- *
- * @returns {SeqRule}
- */
 function commaSep1(rule) {
   return seq(rule, repeat(seq(',', rule)));
 }
