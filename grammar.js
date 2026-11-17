@@ -54,11 +54,10 @@ const builtinTypes = [
 module.exports = grammar({
   name: 'zig',
 
-  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel, $._parameter_name_colon],
+  externals: $ => [$.doc_comment_content, $._empty_doc_comment_content, $._error_sentinel, $._declaration_name_colon],
 
   conflicts: $ => [
     [$.block_label, $.primary_type_expression],
-    [$.block_label, $.container_field],
     [$.for_expression],
     [$.while_expression],
 
@@ -130,7 +129,7 @@ module.exports = grammar({
       choice(
         seq(
           field('name', choice($.identifier, $._reserved_identifier, alias($.builtin_type, $.identifier))),
-          ':',
+          alias($._declaration_name_colon, ':'),
           field('type', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
         ),
         field('name', choice($.primary_type_expression, $.if_type_expression, $.comptime_type_expression, $.error_set_declaration)),
@@ -228,7 +227,7 @@ module.exports = grammar({
         optional(choice('noalias', 'comptime')),
         optional(seq(
           field('name', choice($.identifier, alias($.builtin_type, $.identifier))),
-          alias($._parameter_name_colon, ':'),
+          alias($._declaration_name_colon, ':'),
         )),
         field('type', choice($.type_expression, $.if_type_expression, $.comptime_type_expression)),
       ),

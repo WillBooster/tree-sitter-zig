@@ -207,7 +207,12 @@
                       }
                     },
                     {
-                      "type": "STRING",
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_declaration_name_colon"
+                      },
+                      "named": false,
                       "value": ":"
                     },
                     {
@@ -963,7 +968,7 @@
                       "type": "ALIAS",
                       "content": {
                         "type": "SYMBOL",
-                        "name": "_parameter_name_colon"
+                        "name": "_declaration_name_colon"
                       },
                       "named": false,
                       "value": ":"
@@ -6619,10 +6624,6 @@
       "primary_type_expression"
     ],
     [
-      "block_label",
-      "container_field"
-    ],
-    [
       "for_expression"
     ],
     [
@@ -6692,7 +6693,7 @@
     },
     {
       "type": "SYMBOL",
-      "name": "_parameter_name_colon"
+      "name": "_declaration_name_colon"
     }
   ],
   "inline": [
